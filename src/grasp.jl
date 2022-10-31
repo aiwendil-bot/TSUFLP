@@ -29,7 +29,7 @@ optionnels ? éviterait de reparcourir [1] et [2]
 [4] concentrateurs de lvl 2 ouverts
 =#
 
-# SBI test push
+
 
 function grasp(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Array{Int64,2},
     c::Array{Int64,2},s::Array{Int64,2},d::Array{Float64,2},a::Float64,P::Int64)::Vector{Vector{Int64},3}
