@@ -61,23 +61,25 @@ using Random
 include("nearest_neighbors.jl")
 include("utilities.jl")
 
-function grasp(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Array{Int64,2},
-    c::Array{Int64,2},s::Array{Int64,2},d::Array{Float64,2},a::Float64,P::Int64)::Vector{Vector{Int64},3}
+function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b::Array{Int64,2},
+    c::Array{Int64,2}, s::Array{Int64,2}, d::Array{Float64,2}, a::Float64, P::Int64)::Vector{Vector{Int64},3}
 
-    #construit une solution
-    function genSol(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Array{Int64,2},
-    c::Array{Int64,2},s::Array{Int64,2},d::Array{Float64,2},a::Float64,g::Function)::Vector{Vector{Int64}}
+    #construit une solution de type 1 (objectif minimiser couts)
+    function genSol1(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b::Array{Int64,2},
+    c::Array{Int64,2}, s::Array{Int64,2}, d::Array{Float64,2}, a::Float64)::Vector{Vector{Int64}}
 
         #Initialisation
         #terminaux = 0 => non affectés
         #CLVL1 = 0 => non ouvert
 
-        sol = [zeros(Int64,length(I)),zeros(Int64,length(J)),Int64[],Int64[]]
+        sol = [zeros(Int64,length(I)), zeros(Int64,length(J)), Int64[], Int64[]]
         CL_CLVL1 = deepcopy(J) #on initialise la candidate list à J
         #choisir un CLVL1 au hasard
         random_first = rand(J)
         #on le supprime de la CL
-        deleteat!(CL_CLVL1, find(x->x==random_first,CL_CLVL1))
+        deleteat!(CL_CLVL1, find(x->x == random_first,CL_CLVL1))
+        # on ajoute le candidat a la liste des concetrateurs ouverts
+        push!(sol[3],random_first)
         #terminaux eligibles
         free_terminals = [i for i in 1:length(sol[1]) if sol[1][i] == 0]
         # assignation des terminaux libres les plus proches
@@ -99,7 +101,7 @@ function grasp(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Ar
         while length(filter(x->x==0,sol[1])) > 1
             gmin = minimum([g1(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
             gmax = maximum([g1(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
-            RL = filter(x->g1(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
+            RL = filter(x->g(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
             chosen_one = rand(RL)
             deleteat!(CL_CLVL1, find(x->x==chosen_one,CL_CLVL1))
             free_terminals = [i for i in 1:length(sol[1]) if sol[1][i] == 0]
@@ -122,7 +124,77 @@ function grasp(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Ar
                 push!(sol[4],argmin(s[argmin(b[chosen_one,:])]))
             end
         end
+        return sol
+    end
 
+    #construit une solution de type 2 (objectif minimiser distance max des concentrateurs niv1 et minimiser couts concentrateurs niv 2)
+    function genSol2(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Array{Int64,2},
+    c::Array{Int64,2},s::Array{Int64,2},d::Array{Float64,2},a::Float64)::Vector{Vector{Int64}}
+
+        #Initialisation
+        #terminaux = 0 => non affectés
+        #CLVL1 = 0 => non ouvert
+
+        sol = [zeros(Int64,length(I)),zeros(Int64,length(J)),Int64[],Int64[]]
+        CL_CLVL1 = deepcopy(J) #on initialise la candidate list à J
+        #choisir un CLVL1 au hasard
+        random_first = rand(J)
+        #on le supprime de la CL
+        deleteat!(CL_CLVL1, find(x->x==random_first,CL_CLVL1))
+
+        #on lui affecte son terminal le plus éloigné
+        farthest = argmax(d[chosen_one][j] for j in sol[1])
+        sol[1][farthest] = chosen_one
+        cpt_affectation_ctr = zeros(Int64,length(J))
+        cpt_affectation_ctr[chosen_one] = 1
+
+        #terminaux eligibles
+        free_terminals = [i for i in 1:length(sol[1]) if sol[1][i] == 0]
+
+        # on ajoute le candidat a la liste des concetrateurs ouverts
+        push!(sol[3],random_first)
+
+        #=tant qu'il reste des terminaux à assigner :
+        on calcule la RCL selon g, on choisit un CLVL1 au hasard dedans
+        on affecte les Q terminaux libres les plus proches à ce chosen one
+        et on affecte le clvl2 le moins couteux au chosen one
+
+        =#
+        while length(filter(x->x==0,sol[1])) > 1
+            gmin = minimum([g2(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
+            gmax = maximum([g2(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
+
+            # filtre en fonction du threshold
+            RL = filter(x->g(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
+            chosen_one = rand(RL)
+            free_terminals = [i for i in 1:length(sol[1]) if sol[1][i] == 0]
+
+            #on lui affecte son terminal le plus éloigné
+            farthest = argmax(d[chosen_one][j] for j in sol[1])
+            sol[1][farthest] = chosen_one
+            cpt_affectation_ctr[chosen_one] += 1
+
+            #si le concentrateur n'est pas encore ouvert,
+            if !(chosen_one in sol[3])
+                #on ouvre le CLVL1 choisi
+                push!(sol[3],chosen_one)
+            end
+
+            #si le chosen one est saturé il ne peut plus etre choisi
+            if cpt_affectation_ctr[chosen_one] == Q
+                deleteat!(CL_CLVL1, find(x->x==chosen_one,CL_CLVL1))
+            end
+        end
+
+        # on connecte chaque concentrateur de niveau 1 ouvert a leur concentrateur de niveau 2 le moins couteux
+        for ctr_ouvert in sol[3]
+            cout_ctr_ouvert = [b[ctr_ouvert,k] + (s[k] in sol[4] ? 0 : s[k]) for k in K]
+            CL_CLVL2 = argmin(cout_ctr_ouvert)
+            sol[2][ctr_ouvert] = CL_CLVL2
+            if !(CL_CLVL2 in sol[4])
+                push!(sol[4],CL_CLVL2)
+            end
+        end
         return sol
     end
 

@@ -24,11 +24,11 @@ function g1(candidat::Int64,c::Array{Float64,2},b::Array{Float64,2},s::Vector{Fl
 
     if length(free_terminals) <= Q
         return 1/(sum([c[candidat][k] for k in free_terminals])
-               + minimum(b[candidat,:]) +argmin(s[argmin(b[candidat,:])]) in clvl2_ouverts ? 0 : minimum(s[argmin(b[candidat,:])]))
+               + minimum(b[candidat,:]) + (argmin(s[argmin(b[candidat,:])]) in clvl2_ouverts ? 0 : minimum(s[argmin(b[candidat,:])])))
     else
         nearest = nearest_neighbors(candidat,d,Q)
         return 1/(sum([b[candidat][k] for k in nearest])
-        + minimum(b[candidat,:]) + argmin(s[argmin(b[candidat,:])]) in clvl2_ouverts ? 0 : minimum(s[argmin(b[candidat,:])]))
+        + minimum(b[candidat,:]) + (argmin(s[argmin(b[candidat,:])]) in clvl2_ouverts ? 0 : minimum(s[argmin(b[candidat,:])])))
     end
 end
 
@@ -40,6 +40,11 @@ function g2(candidat::Int64,c::Array{Float64,2},b::Array{Float64,2},s::Vector{Fl
     d::Vector{Vector{Int64}},free_terminals::Vector{Int64},Q::Int64,clvl1_ouverts::Vector{Int64},
     clvl2_ouverts::Vector{Int64})::Float64
 
-    return maximum([d[i][j] for i in vcat(candidat,clvl1_ouverts) for j in free_terminals ])
+    min_ctri = zeros(Int64,length(clvl1_ouverts)+1)
+    for i in 1:length(vcat(candidat,clvl1_ouverts))
+        min_ctri[i] = minimum(d[vcat(candidat,clvl1_ouverts)[i]][j] for j in free_terminals)
+    end
+    return 1/maximum(min_ctri)
+    #return maximum([d[i][j] for i in vcat(candidat,clvl1_ouverts) for j in free_terminals ])
 
 end

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JuliaProjectSettings">
-    <option name="basePath" value="/opt/julia-1.8.1/share/julia/base" />
-    <option name="exePath" value="/opt/julia-1.8.1/bin/julia" />
-    <option name="version" value="1.8.1" />
+    <option name="basePath" value="$USER_HOME$/Documents/Downloads/julia-1.8.0/share/julia/base" />
+    <option name="exePath" value="$USER_HOME$/Documents/Downloads/julia-1.8.0/bin/julia" />
+    <option name="importPath" value="$USER_HOME$/Documents/Downloads/julia-1.8.0/bin" />
+    <option name="version" value="1.8.0" />
   </component>
 </project>
