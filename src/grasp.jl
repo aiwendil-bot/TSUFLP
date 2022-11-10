@@ -8,9 +8,9 @@
 # Arguments
 
 I : terminaux
-J : CLVL1 = concentrateurs de niveau 1
+J : CLVL1 = concentrateurs de niveau 1 (couts = 0.8 à 1.2 fois Q)
 K : CLVL2 = concentrateurs de niveau 2
-Q : capacité max des concentrateurs
+Q : capacité max des concentrateurs (entre 5 et 9, 7 si tous la même)
 b,c,s : arrays de coûts (vérifier si les couts sont float ou int)
 d : arrays de distances entre terminaux et CLVL1
 a : alpha de grasp
