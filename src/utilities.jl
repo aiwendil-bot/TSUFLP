@@ -48,3 +48,17 @@ function g2(candidat::Int64,c::Array{Float64,2},b::Array{Float64,2},s::Vector{Fl
     #return maximum([d[i][j] for i in vcat(candidat,clvl1_ouverts) for j in free_terminals ])
 
 end
+
+#calcul le coût d'affectation du terminal candid au clvl1 conc au regard des objectifs
+# avec un jeu de poids λ
+
+function cout_affectation_term(candid::Int64,conc::Int64,λ::Float64,c::Array{Float64,2},
+    d::Array{Float64,2},clvl1_pris::Vector{Int64}, terminaux_pris::Vector{Int64})::Float64
+
+    current_distance = d[candid][conc]
+    max_distance = length(terminaux_pris) == 0 ? current_distance : maximum([d[i][j] for i in clvl1_pris for j in terminaux_pris])
+
+    cout_obj_2 = current_distance <= max_distance ? 0 : current_distance - max_distance
+
+    return λ * c[conc][candid] + (1-λ) * cout_obj_2
+end
