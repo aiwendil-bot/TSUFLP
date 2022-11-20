@@ -4,42 +4,40 @@ main:
 - Author: sujin
 - Date: 2022-11-02
 =#
+using Random
+Random.seed!(1234)
 
-# Instance
-#f = open("home/sujin/IdeaProjects/TSUFLP/data/didactique.dat", "r")
-open("data/didactique.dat") do f
+include("generation_couts.jl")
+include("recup_data.jl")
+include("grasp.jl")
 
-    # line_number
-    line = 0
+function main()
 
-    # read till end of file
-    tab_str = readlines(f)
-    ligne1 = Tuple(parse.(Int64, split(tab_str[1], ' ')))
-    NK = ligne1[1]
-    NJ = ligne1[2]
-    NI = ligne1[3]
+    terminaux = readdlm("data/terminaux.txt")
+    coord_terminaux = terminaux[rand(1:size(terminaux,1),200),:]
+    coord_clvl1 = readdlm("data/clvl1.txt")
+    coord_clvl2 = readdlm("data/clvl2.txt")
 
-    println(NK, " ", NJ, " ", NI)
-    coord_ctr_2 = [Vector(parse.(Float64, split(tab_str[i], ' '))) for i in 2:(NK+1)]
-    coord_ctr_1 = [Vector(parse.(Float64, split(tab_str[i], ' '))) for i in (NK+2):(NK+1+NJ)]
-    coord_terminaux = [Vector(parse.(Float64, split(tab_str[i], ' '))) for i in (NJ+NK+2):(NJ+NK+1+NI)]
-    println(coord_ctr_2)
-    println(coord_ctr_1)
-    println(coord_terminaux)
+    I = [i for i in 1:size(coord_terminaux,1)]
+    J = [i for i in 1:size(coord_clvl1,1)]
+    K = [i for i in 1:size(coord_clvl2,1)]
 
-    d = zeros(Float64, (NJ, NI))
+    Q::Int64 = 7
 
-    for i in 1:NJ
-       for j in 1:NI
-           d_ij[i,j] = (coord_ctr_1[i][1] - coord_terminaux[j][1])^2 + (coord_ctr_1[i][2] - coord_terminaux[j][2])^2
-       end
-    end
+    a::Float64 = 0.4
 
-    for i in 1:NK
-       for j in 1:NJ
-           d_ij[i,j] = (coord_ctr_1[i][1] - coord_terminaux[j][1])^2 + (coord_ctr_1[i][2] - coord_terminaux[j][2])^2
-       end
-    end
+    P = 20
 
-    show(d_ij)
+    #génération coûts
+    distances = generation_matrice_distance(coord_terminaux,coord_clvl1)
+    couts_clvl1 = generation_couts_ouverture_clvl(size(coord_clvl1,1))
+    couts_clvl2 = generation_couts_ouverture_clvl(size(coord_clvl2,1))
+
+    b = generation_matrice_b(distances,couts_clvl1)
+    s = generation_couts_ouverture_clvl(size(coord_clvl2,1))
+
+    display(grasp(I, J, K, Q, b, distances, s, distances, a, P))
+
 end
+
+main()

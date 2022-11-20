@@ -61,12 +61,12 @@ using Random
 include("nearest_neighbors.jl")
 include("utilities.jl")
 
-function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b::Array{Int64,2},
-    c::Array{Int64,2}, s::Array{Int64,2}, d::Array{Float64,2}, a::Float64, P::Int64)::Vector{Vector{Int64},3}
+function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b::Array{Float64,2},
+    c::Array{Float64,2}, s::Vector{Float64}, d::Array{Float64,2}, a::Float64, P::Int64)::Vector{Vector{Int64}}
 
     #construit une solution de type 1 (objectif minimiser couts)
-    function genSol1(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b::Array{Int64,2},
-    c::Array{Int64,2}, s::Array{Int64,2}, d::Array{Float64,2}, a::Float64)::Vector{Vector{Int64}}
+    function genSol1(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b::Array{Float64,2},
+    c::Array{Float64,2}, s::Vector{Float64}, d::Array{Float64,2}, a::Float64)::Vector{Vector{Int64}}
 
         #Initialisation
         #terminaux = 0 => non affectés
@@ -77,7 +77,7 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
         #choisir un CLVL1 au hasard
         random_first = rand(J)
         #on le supprime de la CL
-        deleteat!(CL_CLVL1, find(x->x == random_first,CL_CLVL1))
+        deleteat!(CL_CLVL1, findfirst(x->x == random_first,CL_CLVL1))
         # on ajoute le candidat a la liste des concetrateurs ouverts
         push!(sol[3],random_first)
         #terminaux eligibles
@@ -101,15 +101,18 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
         while length(filter(x->x==0,sol[1])) >= 1
             gmin = minimum([g1(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
             gmax = maximum([g1(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
-            RL = filter(x->g(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
+            RL = filter(x->g1(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
+            println(sol[1])
             chosen_one = rand(RL)
-            deleteat!(CL_CLVL1, find(x->x==chosen_one,CL_CLVL1))
+            deleteat!(CL_CLVL1, findfirst(x->x==chosen_one,CL_CLVL1))
             free_terminals = [i for i in 1:length(sol[1]) if sol[1][i] == 0]
+            println(free_terminals)
             if length(free_terminals) <= Q
                 for i in free_terminals
                     sol[1][i] = chosen_one
                 end
             else
+                println(nearest_neighbors(d,chosen_one,Q,free_terminals))
                 for i in nearest_neighbors(d,chosen_one,Q,free_terminals)
                     sol[1][i] = chosen_one
                 end
@@ -127,9 +130,11 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
         return sol
     end
 
+    return genSol1(I, J, K, Q, b, c, s, d, a)
+
     #construit une solution de type 2 (objectif minimiser distance max des concentrateurs niv1 et minimiser couts concentrateurs niv 2)
-    function genSol2(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Array{Int64,2},
-    c::Array{Int64,2},s::Array{Int64,2},d::Array{Float64,2},a::Float64)::Vector{Vector{Int64}}
+    function genSol2(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Array{Float64,2},
+    c::Array{Float64,2},s::Vector{Float64},d::Array{Float64,2},a::Float64)::Vector{Vector{Int64}}
 
         #Initialisation
         #terminaux = 0 => non affectés
@@ -167,7 +172,7 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
             gmax = maximum([g2(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
 
             # filtre en fonction du threshold
-            RL = filter(x->g(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
+            RL = filter(x->g2(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
             chosen_one = rand(RL)
             free_terminals = [i for i in 1:length(sol[1]) if sol[1][i] == 0]
 
@@ -202,8 +207,8 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
 
     #construit une solution de type 3 (0.5-0.5 entre
     #minimiser distance max des concentrateurs niv1 et les coûts puis minimiser couts concentrateurs niv 2)
-    function genSol_compromis(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Array{Int64,2},
-    c::Array{Int64,2},s::Array{Int64,2},d::Array{Float64,2},a::Float64, λ::Float64)::Vector{Vector{Int64}}
+    function genSol_compromis(I::Vector{Int64},J::Vector{Int64},K::Vector{Int64},Q::Int64,b::Array{Float64,2},
+    c::Array{Float64,2},s::Vector{Float64},d::Array{Float64,2},a::Float64, λ::Float64)::Vector{Vector{Int64}}
 
         #Initialisation
         #terminaux = 0 => non affectés
@@ -246,7 +251,8 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
             (1-λ)*g2(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
 
             # filtre en fonction du threshold
-            RL = filter(x->g(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
+            RL = filter(x->λ* g1(k,c,b,s,d,free_terminals,Q,sol[3],sol[4])+
+            (1-λ)*g2(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
             chosen_one = rand(RL)
             free_terminals = [i for i in 1:length(sol[1]) if sol[1][i] == 0]
 
@@ -280,7 +286,5 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
         end
         return sol
     end
-
-
 
 end

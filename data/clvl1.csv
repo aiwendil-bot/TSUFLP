@@ -1,0 +1,72 @@
+latitude,longitude,altitude,geometry,coordinates,@id,man_made,source,name,power,ref:FR:gdo,note,street_cabinet,ref,colour,operator,ref:FR:ARCEP,ref:FR:Orange,telecom:medium,start_date,hinge,owner,telecom,utility,manufacturer,substation,current,description,frequency,location,operator:wikidata,operator:wikipedia,owner:wikidata,owner:wikipedia,phases,rating,voltage
+,,,Polygon,"-0.6726869,47.5405266,-0.6726892,47.5405059,-0.6726541,47.5405039,-0.6726518,47.5405246,-0.6726869,47.5405266",way/555788157,street_cabinet,cadastre-dgi-fr source : Direction Générale des Finances Publiques - Cadastre. Mise à jour : 2018,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5567771,47.4898464,-0.5567727,47.4898457,-0.55677,47.4898533,-0.5567745,47.489854,-0.5567771,47.4898464",way/713177797,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5124497,47.4606248,-0.5124616,47.4606014,-0.5124391,47.4605961,-0.5124272,47.4606196,-0.5124497,47.4606248",way/930692168,street_cabinet,,Paperie Larivière,substation,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5368182,47.4574432,-0.5368176,47.4574215,-0.5367841,47.4574215,-0.5367848,47.4574432,-0.5368182,47.4574432",way/962340696,street_cabinet,,Maillotin,substation,49007P0697,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5123343,47.4619931,-0.5123345,47.4619793,-0.5123218,47.4619792,-0.5123216,47.461993,-0.5123343,47.4619931",way/968891982,street_cabinet,,Paperie Larivière,substation,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5173256,47.4535326,-0.5173297,47.4535231,-0.5173234,47.4535219,-0.5173193,47.4535313,-0.5173256,47.4535326",way/968911277,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.4920139,47.4611976,-0.4920139,47.4611893,-0.4919921,47.4611894,-0.4919921,47.4611977,-0.4920139,47.4611976",way/971602927,street_cabinet,,,,,gaz,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5124656,47.4605878,-0.5124719,47.4605754,-0.5124588,47.4605724,-0.5124526,47.4605848,-0.5124656,47.4605878",way/977553498,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5542324,47.4588085,-0.5542302,47.4587934,-0.5542195,47.4587941,-0.5542218,47.4588092,-0.5542324,47.4588085",way/982250279,street_cabinet,,,,,,power,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5155853,47.4746189,-0.5155988,47.4746114,-0.5155784,47.4745944,-0.5155648,47.4746019,-0.5155853,47.4746189",way/987153417,street_cabinet,,,,49267DP0002,,gas,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5150465,47.477222,-0.5150408,47.4772389,-0.5150877,47.4772461,-0.5150934,47.4772292,-0.5150465,47.477222",way/987153430,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.506354,47.475528,-0.5063593,47.475524,-0.5063461,47.4755159,-0.5063407,47.47552,-0.506354,47.475528",way/987165815,street_cabinet,,,,,,gas,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5063475,47.4749919,-0.506343,47.4749892,-0.506332,47.4749974,-0.5063365,47.4750001,-0.5063475,47.4749919",way/987165816,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.512881,47.4728372,-0.5128816,47.472832,-0.5128606,47.4728309,-0.51286,47.4728362,-0.512881,47.4728372",way/987165847,street_cabinet,,Tombini,,,,,GI072707,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.4975548,47.4945464,-0.4975699,47.494539,-0.4975558,47.4945259,-0.4975407,47.4945333,-0.4975548,47.4945464",way/988519321,street_cabinet,,,substation,,,power,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5076346,47.4557349,-0.5076379,47.4557316,-0.5076164,47.4557219,-0.5076131,47.4557252,-0.5076346,47.4557349",way/997368957,street_cabinet,,,,,,telecom,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5039489,47.4369237,-0.5039253,47.4369137,-0.5039153,47.4369245,-0.5039389,47.4369345,-0.5039489,47.4369237",way/1039604775,street_cabinet,,,,,,gas,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5252774,47.4523873,-0.5252737,47.452386,-0.525266,47.4523963,-0.5252697,47.4523975,-0.5252774,47.4523873",way/1042838403,street_cabinet,,,,,,telecom,,#727170,Orange,FI-49007-004H,PT7,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5252667,47.4524016,-0.5252629,47.4524003,-0.5252552,47.4524105,-0.525259,47.4524118,-0.5252667,47.4524016",way/1042838404,street_cabinet,,,,,,telecom,,#727170,Orange,FI-49007-005H,PT6,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5541814,47.4585952,-0.5541788,47.4585811,-0.5541745,47.4585814,-0.554177,47.4585956,-0.5541814,47.4585952",way/1056174626,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5541845,47.4586121,-0.554182,47.4585979,-0.5541776,47.4585982,-0.5541801,47.4586124,-0.5541845,47.4586121",way/1056174627,street_cabinet,,,,,,,AN8,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5541694,47.4585227,-0.5541665,47.4585066,-0.5541609,47.4585071,-0.5541638,47.4585232,-0.5541694,47.4585227",way/1056174628,street_cabinet,,,,,,telecom,,,Orange,FI-49007-006D,PT5662,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5545729,47.4613331,-0.5545701,47.4613174,-0.5545645,47.4613178,-0.5545674,47.4613336,-0.5545729,47.4613331",way/1056174629,street_cabinet,,,,,,telecom,,,Orange,FI-49007-0067,PT5656,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5545766,47.4613535,-0.5545737,47.4613374,-0.5545681,47.4613378,-0.554571,47.461354,-0.5545766,47.4613535",way/1056174630,street_cabinet,,,,,,telecom,,,Orange,FI-49007-0068,PT5655,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.4996546,47.4641348,-0.4996487,47.4641315,-0.4996328,47.4641449,-0.4996387,47.4641481,-0.4996546,47.4641348",way/1059927178,street_cabinet,,,,,,telecom,,,Orange,FI-49267-0009,PT1077,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.530975,47.4497507,-0.530972,47.449747,-0.530957,47.4497523,-0.5309599,47.4497561,-0.530975,47.4497507",way/1059927617,street_cabinet,,,,,,,771982J,,,,,,1990,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5309946,47.4497435,-0.5309916,47.4497397,-0.530975,47.4497456,-0.5309779,47.4497494,-0.5309946,47.4497435",way/1059927618,street_cabinet,,,,,,,C 21,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5310247,47.4497312,-0.5310219,47.4497276,-0.531004,47.449734,-0.5310068,47.4497376,-0.5310247,47.4497312",way/1059927619,street_cabinet,,,,,,telecom,,,Orange,FI-49007-004P,PT12,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5480509,47.4546947,-0.5480548,47.4546915,-0.5480392,47.4546828,-0.5480353,47.4546859,-0.5480509,47.4546947",way/1059928525,street_cabinet,,,,,,telecom,,,Orange,FI-49007-007R,PT1542,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5452251,47.4536393,-0.5452212,47.4536361,-0.5452055,47.4536448,-0.5452094,47.4536479,-0.5452251,47.4536393",way/1059928526,street_cabinet,,,,,,telecom,,,Orange,FI-49007-007Z,PT1541,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5450124,47.4527285,-0.5450183,47.4527273,-0.5450125,47.4527142,-0.5450067,47.4527153,-0.5450124,47.4527285",way/1059928527,street_cabinet,,,,,,telecom,,,Orange,FI-49007-0083,PT1540,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5675663,47.4748925,-0.5675447,47.4748853,-0.5675428,47.4748878,-0.5675644,47.474895,-0.5675663,47.4748925",way/1099871144,street_cabinet,,,,,,telecom,,,Orange,FI-49007-002N,PT105,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5607693,47.4738847,-0.5607549,47.4738738,-0.5607514,47.473876,-0.5607658,47.4738868,-0.5607693,47.4738847",way/1112305204,street_cabinet,,,,,,telecom,,,Orange,FI-49007-000A,PT0016,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5669101,47.4740265,-0.5669066,47.4740118,-0.5668999,47.4740125,-0.5669034,47.4740273,-0.5669101,47.4740265",way/1112367745,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5670904,47.474441,-0.5670894,47.4744351,-0.5670854,47.4744354,-0.5670863,47.4744413,-0.5670904,47.474441",way/1112448795,street_cabinet,,,,,,postal_service,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5672606,47.474133,-0.5672594,47.4741303,-0.567252,47.4741319,-0.5672532,47.4741345,-0.5672606,47.474133",way/1112448796,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5672898,47.4741283,-0.5672871,47.4741229,-0.5672617,47.4741286,-0.5672644,47.474134,-0.5672898,47.4741283",way/1112448797,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5677151,47.4745428,-0.5677221,47.4745303,-0.5677172,47.4745291,-0.5677101,47.4745415,-0.5677151,47.4745428",way/1112448799,street_cabinet,,,,,,telecom,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5616143,47.4746633,-0.5616322,47.4746525,-0.5616285,47.4746496,-0.5616105,47.4746605,-0.5616143,47.4746633",way/1112451615,street_cabinet,,,,,,telecom,,,Orange,FI-49007-0005,PT0022,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.564283,47.4747202,-0.564287,47.4747362,-0.5642925,47.4747356,-0.5642886,47.4747195,-0.564283,47.4747202",way/1112451618,street_cabinet,,,,,,telecom,,,Orange,FI-49007-000G,PT0017,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5644408,47.474502,-0.5644321,47.4745027,-0.5644326,47.4745054,-0.5644413,47.4745048,-0.5644408,47.474502",way/1112451623,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5644542,47.4745007,-0.5644455,47.4745013,-0.564446,47.4745041,-0.5644547,47.4745034,-0.5644542,47.4745007",way/1112451624,street_cabinet,,,,,,postal_service,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5643216,47.474536,-0.564298,47.4745388,-0.5642989,47.4745426,-0.5643227,47.4745397,-0.5643216,47.474536",way/1112451625,street_cabinet,,,,,,telecom,,,Orange,FI-49007-0002,PT0018,fibre,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5653024,47.4745466,-0.565301,47.4745407,-0.565297,47.4745411,-0.5652984,47.474547,-0.5653024,47.4745466",way/1112451626,street_cabinet,,,,,,postal_service,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5669171,47.4740255,-0.5669143,47.4740135,-0.5669092,47.4740141,-0.566912,47.4740261,-0.5669171,47.4740255",way/1112454480,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Polygon,"-0.5669336,47.4740991,-0.5669301,47.4740844,-0.5669234,47.4740851,-0.5669269,47.4740999,-0.5669336,47.4740991",way/1112454481,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+47.4668166,-0.554451,,Point,,node/3256129504,street_cabinet,survey;mapillary,,,,,postal_service,,,La Poste,,,,,horizontal,,,,,,,,,,,,,,,,
+47.4727012,-0.5522176,,Point,,node/7504279908,street_cabinet,,,,,,telecom,,,Orange,FI-49007-002E,,fibre,,,Orange,connection_point,telecom,,,,,,,,,,,,,
+47.4730638,-0.5523503,,Point,,node/7504279909,street_cabinet,,,,,,telecom,,,Orange,FI-49007-001E,,fibre,,,Orange,connection_point,telecom,,,,,,,,,,,,,
+47.4728786,-0.5549055,,Point,,node/7515443959,street_cabinet,,,,,,telecom,,,Orange,,,fibre,,,Orange,connection_point,telecom,,,,,,,,,,,,,
+47.4711789,-0.5545735,,Point,,node/7515443960,street_cabinet,,,,,,telecom,,,Orange,FI-49007-001M,,fibre,,,Orange,connection_point,telecom,,,,,,,,,,,,,
+47.4711698,-0.5545869,,Point,,node/7515443961,street_cabinet,,,,,,telecom,,,Orange,FI-49007-002F,,fibre,,,Orange,connection_point,telecom,,,,,,,,,,,,,
+47.475807,-0.3563401,,Point,,node/8298117649,street_cabinet,,SRO,,,,telecom,,,TDF Fibre,ANFI-LOIRA26,,fibre,,,Anjou Fibre,connection_point,telecom,Idea Optical,,,,,,,,,,,,
+47.4338976,-0.4054543,,Point,,node/8636315631,street_cabinet,,SRO,,,,telecom,,,TDF Fibre,PM ANFI-LOIRA05,,fibre,,,Anjou Fibre,connection_point,telecom,Idea Optical,,,,,,,,,,,,
+47.3955793,-0.5554095,,Point,,node/9251110993,street_cabinet,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+47.4005465,-0.757447,,Point,,node/9453757973,street_cabinet,,SRO,,,,telecom,,,Altitude,ANFI-STGSL05,,fibre,,,Pixl Fibre,connection_point,telecom,Ideaoptical,,,,,,,,,,,,
+47.3998055,-0.4897876,,Point,,node/9776460318,street_cabinet,,,substation,,,power,PN18_BRULON,,,,,,,,,,power,,minor_distribution,,,,,,,,,,,
+47.5003074,-0.491127,,Point,,node/9817520703,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5002946,-0.4910941,,Point,,node/9817520704,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5002742,-0.4910959,,Point,,node/9817520705,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5002875,-0.4911283,,Point,,node/9817520706,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5002787,-0.4910502,,Point,,node/9817520707,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5002686,-0.4910213,,Point,,node/9817520708,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5003488,-0.4912622,,Point,,node/9817520709,street_cabinet,,,,,,power,,,Ionity,,,,2019-24-07,horizontal,Ionity,,power,,,,TGBT,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,,,400
+47.5003211,-0.4912827,,Point,,node/9817520710,street_cabinet,,,,,TGBT,power,,,Ionity,,,,2019-24-07,horizontal,Ionity,,power,,,,,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,,,400
+47.500293,-0.4911417,,Point,,node/9817905986,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5003025,-0.4911141,,Point,,node/9817905987,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5002888,-0.4910808,,Point,,node/9817905988,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5002787,-0.4911079,,Point,,node/9817905989,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.500283,-0.4910619,,Point,,node/9817905990,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
+47.5002733,-0.4910339,,Point,,node/9817905991,street_cabinet,,,converter,,,power,,white,Ionity,,,,2019-24-07,horizontal,Ionity,,power,ABB,,375,Armoire de puissance,50,outdoor,Q42717773,en:IONITY,Q42717773,en:IONITY,3,175 kW,920
