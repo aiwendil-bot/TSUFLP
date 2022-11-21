@@ -15,7 +15,7 @@
 #O(n)
 function nearest_neighbors(d::Matrix{Float64},origin::Int64,Q::Int64,available_neighbors::Vector{Int64})
 
-    neighbors = [d[k][origin] for k in available_neighbors]
+    neighbors = [d[k, origin] for k in available_neighbors]
     nearest = Int64[]
     for n in 1:length(neighbors)
         if length(nearest) < Q

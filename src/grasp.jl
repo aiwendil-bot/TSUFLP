@@ -59,6 +59,7 @@ solution : vecteur composé de :
 
 using Random
 using Dates
+
 include("nearest_neighbors.jl")
 include("utilities.jl")
 

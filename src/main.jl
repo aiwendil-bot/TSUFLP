@@ -4,7 +4,7 @@ main:
 - Author: sujin
 - Date: 2022-11-02
 =#
-using Random
+using Random, Profile
 Random.seed!(1234)
 
 include("generation_couts.jl")
@@ -30,10 +30,13 @@ function main()
 
     #génération coûts
     distances = generation_matrice_distance(coord_terminaux,coord_clvl1)
+    distances_concentrators = generation_matrice_distance(coord_clvl1,coord_clvl2)
+
     couts_clvl1 = generation_couts_ouverture_clvl(size(coord_clvl1,1))
     couts_clvl2 = generation_couts_ouverture_clvl(size(coord_clvl2,1))
+    println(size(couts_clvl1))
+    b = generation_matrice_b(distances_concentrators,couts_clvl1)
 
-    b = generation_matrice_b(distances,couts_clvl1)
     s = generation_couts_ouverture_clvl(size(coord_clvl2,1))
 
     @time display(grasp(I, J, K, Q, b, distances, s, distances, a, P))

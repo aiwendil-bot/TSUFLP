@@ -28,8 +28,9 @@ end
 function generation_matrice_b(distances::Array{Float64,2},couts::Vector{Float64})::Array{Float64,2}
 
     b = distances
-    for i in 1:size(distances,1)
-        b[i,:] = b[i,:] .+ couts
+    println(size(b))
+    for i in 1:size(distances,2)
+        b[:,i] = b[:,i] .+ couts
     end
     return b
 end
