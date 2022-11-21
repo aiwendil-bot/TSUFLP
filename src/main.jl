@@ -36,7 +36,7 @@ function main()
     b = generation_matrice_b(distances,couts_clvl1)
     s = generation_couts_ouverture_clvl(size(coord_clvl2,1))
 
-    display(grasp(I, J, K, Q, b, distances, s, distances, a, P))
+    @time display(grasp(I, J, K, Q, b, distances, s, distances, a, P))
 
 end
 

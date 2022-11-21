@@ -58,6 +58,7 @@ solution : vecteur composé de :
 =#
 
 using Random
+using Dates
 include("nearest_neighbors.jl")
 include("utilities.jl")
 
@@ -99,24 +100,31 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
 
         =#
         while length(filter(x->x==0,sol[1])) >= 1
-            gmin = minimum([g1(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
-            gmax = maximum([g1(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1])
-            RL = filter(x->g1(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
-            println(sol[1])
+            println("evaluation RL")
+            startingtime=Dates.now()
+            evals = [g1(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1]
+            gmin = minimum(evals)
+            gmax = maximum(evals)
+            #RL = filter(x->g1(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
+            RL = filter(i->evals[i] > (gmax - a*(gmax-gmin)),CL_CLVL1)
+            println(Dates.value(Dates.now()-startingtime)/1000)
             chosen_one = rand(RL)
+            println("delete")
             deleteat!(CL_CLVL1, findfirst(x->x==chosen_one,CL_CLVL1))
             free_terminals = [i for i in 1:length(sol[1]) if sol[1][i] == 0]
-            println(free_terminals)
+            #println(free_terminals)
+            startingtime = Dates.now()
             if length(free_terminals) <= Q
                 for i in free_terminals
                     sol[1][i] = chosen_one
                 end
             else
-                println(nearest_neighbors(d,chosen_one,Q,free_terminals))
-                for i in nearest_neighbors(d,chosen_one,Q,free_terminals)
+                println("nearest neighbors")
+                for i in @time nearest_neighbors(d,chosen_one,Q,free_terminals)
                     sol[1][i] = chosen_one
                 end
             end
+            println(Dates.value(Dates.now()-startingtime)/1000)
             #on ouvre le CLVL1 choisi
             push!(sol[3],chosen_one)
 
