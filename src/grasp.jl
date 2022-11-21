@@ -101,39 +101,35 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
 
         =#
         while length(filter(x->x==0,sol[1])) >= 1
-            println("evaluation RL")
             startingtime=Dates.now()
             evals = [g1(k,c,b,s,d,free_terminals,Q,sol[3],sol[4]) for k in CL_CLVL1]
             gmin = minimum(evals)
             gmax = maximum(evals)
             #RL = filter(x->g1(x,c,b,s,d,free_terminals,Q,sol[3],sol[4]) > (gmax - a*(gmax-gmin)),CL_CLVL1)
-            RL = filter(i->evals[i] > (gmax - a*(gmax-gmin)),CL_CLVL1)
-            println(Dates.value(Dates.now()-startingtime)/1000)
+            RL_index = filter(i->evals[i] > (gmax - a*(gmax-gmin)),[i for i in 1:length(evals)])
+            RL = [CL_CLVL1[i] for i in RL_index]
             chosen_one = rand(RL)
-            println("delete")
             deleteat!(CL_CLVL1, findfirst(x->x==chosen_one,CL_CLVL1))
             free_terminals = [i for i in 1:length(sol[1]) if sol[1][i] == 0]
-            #println(free_terminals)
             startingtime = Dates.now()
             if length(free_terminals) <= Q
                 for i in free_terminals
                     sol[1][i] = chosen_one
                 end
             else
-                println("nearest neighbors")
-                for i in @time nearest_neighbors(d,chosen_one,Q,free_terminals)
+                for i in  nearest_neighbors(d,chosen_one,Q,free_terminals)
                     sol[1][i] = chosen_one
                 end
             end
-            println(Dates.value(Dates.now()-startingtime)/1000)
             #on ouvre le CLVL1 choisi
             push!(sol[3],chosen_one)
 
             #on l'affecte au clvl2 le moins couteux
-            sol[2][chosen_one] = argmin(s[chosen_one])
+            sol[2][chosen_one] = argmin([b[chosen_one,k] + k in sol[4] ? 0 : s[k] for k in K])
+            
             #et on ouvre si ce n'est pas déjà le cas ce clvl2
-            if !(argmin(s[argmin(b[chosen_one,:])]) in sol[4])
-                push!(sol[4],argmin(s[argmin(b[chosen_one,:])]))
+            if !(argmin([b[chosen_one,k] + k in sol[4] ? 0 : s[k] for k in K]) in sol[4])
+                push!(sol[4],argmin([b[chosen_one,k] + k in sol[4] ? 0 : s[k] for k in K]))
             end
         end
         return sol

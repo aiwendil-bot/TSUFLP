@@ -5,7 +5,7 @@ main:
 - Date: 2022-11-02
 =#
 using Random, Profile
-Random.seed!(1234)
+Random.seed!(1235)
 
 include("generation_couts.jl")
 include("recup_data.jl")
@@ -34,7 +34,6 @@ function main()
 
     couts_clvl1 = generation_couts_ouverture_clvl(size(coord_clvl1,1))
     couts_clvl2 = generation_couts_ouverture_clvl(size(coord_clvl2,1))
-    println(size(couts_clvl1))
     b = generation_matrice_b(distances_concentrators,couts_clvl1)
 
     s = generation_couts_ouverture_clvl(size(coord_clvl2,1))
