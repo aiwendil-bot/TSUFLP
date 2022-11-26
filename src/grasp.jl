@@ -127,10 +127,12 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
             push!(sol[3],chosen_one)
 
             #on l'affecte au clvl2 le moins couteux
-            sol[2][chosen_one] = argmin([b[chosen_one,k] + k in sol[4] ? 0 : s[k] for k in K])
+            clvl2_moins_cher = argmin([b[chosen_one,k] + k in sol[4] ? 0 : s[k] for k in K])
+            sol[2][chosen_one] = clvl2_moins_cher
+                
             #et on ouvre si ce n'est pas déjà le cas ce clvl2
-            if !(argmin([b[chosen_one,k] + k in sol[4] ? 0 : s[k] for k in K]) in sol[4])
-                push!(sol[4],argmin([b[chosen_one,k] + k in sol[4] ? 0 : s[k] for k in K]))
+            if !(clvl2_moins_cher in sol[4])
+                push!(sol[4],clvl2_moins_cher)
             end
         end
         return sol
@@ -155,14 +157,14 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
         random_first = rand(J)
         
         # on ajoute le candidat a la liste des concetrateurs ouverts
-
+        #=
         push!(sol[3],random_first)
         compteur_affectation_conc[random_first] += 1
         sol[1][terminaux_tries_distance[end,random_first]] = random_first
+        =#
+        deleteat!(CL_CLVL1, findfirst(x->x==random_first,CL_CLVL1))
 
-        #deleteat!(CL_CLVL1, findfirst(x->x==random_first,CL_CLVL1))
-
-        #affect_rapide!(random_first,terminaux_tries_distance,free_terminals,Q,sol)
+        affect_rapide!(random_first,terminaux_tries_distance,free_terminals,Q,sol)
 
 
 
@@ -187,14 +189,14 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
 
             #on ouvre le CLVL1 choisi
             #version "rapide"
-            #=
+            
             push!(sol[3],chosen_one)
             deleteat!(CL_CLVL1, findfirst(x->x==chosen_one,CL_CLVL1))
             
             affect_rapide!(chosen_one,terminaux_tries_distance,free_terminals,Q,sol)
-            =#
-            #version "lente"
             
+            #version "lente"
+            #=
             if !(chosen_one in sol[3])
                 push!(sol[3], chosen_one)
             end
@@ -213,17 +215,18 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
             if compteur_affectation_conc[chosen_one] == Q
                 deleteat!(CL_CLVL1, findfirst(x->x==chosen_one,CL_CLVL1))
             end
-
+            =#
         end
 
         # on connecte chaque concentrateur de niveau 1 ouvert a leur concentrateur de niveau 2 le moins couteux
         for ctr_ouvert in sol[3]
             #on l'affecte au clvl2 le moins couteux
-            sol[2][ctr_ouvert] = argmin([b[ctr_ouvert,k] + k in sol[4] ? 0 : s[k] for k in K])
-            
+            clvl2_moins_cher = argmin([b[ctr_ouvert,k] + k in sol[4] ? 0 : s[k] for k in K])
+            sol[2][ctr_ouvert] = clvl2_moins_cher
+                
             #et on ouvre si ce n'est pas déjà le cas ce clvl2
-            if !(argmin([b[ctr_ouvert,k] + k in sol[4] ? 0 : s[k] for k in K]) in sol[4])
-                push!(sol[4],argmin([b[ctr_ouvert,k] + k in sol[4] ? 0 : s[k] for k in K]))
+            if !(clvl2_moins_cher in sol[4])
+                push!(sol[4],clvl2_moins_cher)
             end
         end
         return sol

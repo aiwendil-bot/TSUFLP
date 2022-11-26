@@ -117,3 +117,31 @@ function evaluate_solution(sol::Vector{Vector{Int64}}, d::Array{Float64,2},
     return [z1, z2]
     
 end
+
+function gain_shift(obj::Int64, solInit::Vector{Vector{Int64}},solModif::Vector{Vector{Int64}},
+                    terminal::Int64,c::Array{Float64,2},b::Array{Float64,2},s::Vector{Float64},
+                    d::Array{Float64,2})
+
+    gain = 0                
+    if obj == 1
+
+        clvl1_depart = solInit[1][terminal]
+        clvl1_arrivee = solModif[1][terminal]
+
+        clvl2_depart = solInit[2][clvl1_depart]
+        clvl2_arrivee = solModif[2][clvl1_arrivee]
+
+        gain += c[terminal,clvl1_arrivee] - c[terminal,clvl1_depart]
+        gain += b[clvl1_arrivee,clvl2_arrivee] - b[clvl1_depart,clvl2_depart]
+        gain += s[clvl2_arrivee] - s[clvl2_depart]
+        
+    else
+
+        gain += maximum([d[i,solModif[1][i]] for i in 1:length(solModif[1])]) - 
+                maximum([d[i,solInit[1][i]] for i in 1:length(solInit[1])])
+        
+    end    
+
+    return gain
+
+end                    
