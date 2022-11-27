@@ -105,17 +105,27 @@ solution : vecteur composé de :
 [4] concentrateurs de lvl 2 ouverts
 =#
 
-function evaluate_solution(sol::Vector{Vector{Int64}}, d::Array{Float64,2}, 
+
+function evaluate_solution(obj::Int64,sol::Vector{Vector{Int64}}, d::Array{Float64,2}, 
                             c::Array{Float64}, b::Array{Float64},s::Vector{Float64})
 
-    z1 = sum([c[i,sol[1][i]] for i in 1:length(sol[1])]) + 
+    if obj == 1
+
+    return sum([c[i,sol[1][i]] for i in 1:length(sol[1])]) + 
          sum([b[j,sol[2][j]] for j in 1:length(sol[2]) if sol[2][j] != 0])+
          sum([s[k] for k in sol[4]])
-    
-    z2 = maximum([d[i,sol[1][i]] for i in 1:length(sol[1])])
+    end
 
-    return [z1, z2]
-    
+    if obj == 2
+
+    return maximum([d[i,sol[1][i]] for i in 1:length(sol[1])])
+    end
+    if obj == 3
+        
+        return [sum([c[i,sol[1][i]] for i in 1:length(sol[1])]) + 
+         sum([b[j,sol[2][j]] for j in 1:length(sol[2]) if sol[2][j] != 0])+
+         sum([s[k] for k in sol[4]]), maximum([d[i,sol[1][i]] for i in 1:length(sol[1])])]
+    end
 end
 
 function gain_shift(obj::Int64, solInit::Vector{Vector{Int64}},solModif::Vector{Vector{Int64}},

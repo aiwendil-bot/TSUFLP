@@ -37,14 +37,14 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
             
             if !(neighborhood[i] in tabu_list)
                 #display(neighborhood[i][2])
-                if evaluate_solution(neighborhood[i],d,c,b,s)[obj] < evaluate_solution(best_candidate,d,c,b,s)[obj]
+                if evaluate_solution(obj,neighborhood[i],d,c,b,s) < evaluate_solution(obj,best_candidate,d,c,b,s)
                 #if gain_swap(obj,best_candidate,neighborhood[i][2],neighborhood[i][1][1][1],neighborhood[i][1][1][2],c,b,s,d) < 0
                 found_amelio = true
                     best_candidate = neighborhood[i]
                 end
             else
 
-                if evaluate_solution(neighborhood[i],d,c,b,s)[obj] < evaluate_solution(best_solution,d,c,b,s)[obj]
+                if evaluate_solution(obj,neighborhood[i],d,c,b,s) < evaluate_solution(obj,best_solution,d,c,b,s)
                     best_candidate = neighborhood[i]
                     found_amelio = true
                 end    
@@ -54,11 +54,11 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
         end
 
         if !found_amelio
-            best_candidate = tabu_list[findmin(x -> evaluate_solution(x,d,c,b,s)[obj],tabu_list)[2]]
+            best_candidate = tabu_list[findmin(x -> evaluate_solution(obj,x,d,c,b,s),tabu_list)[2]]
             cpt_pas_amelioration += 1  
 
         else 
-            if evaluate_solution(best_candidate,d,c,b,s)[obj] < evaluate_solution(best_solution,d,c,b,s)[obj]
+            if evaluate_solution(obj,best_candidate,d,c,b,s) < evaluate_solution(obj,best_solution,d,c,b,s)
                 best_solution = best_candidate
                 cpt_pas_amelioration = 0
             end

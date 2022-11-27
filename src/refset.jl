@@ -6,8 +6,8 @@ function update_refset(solutions::Vector{Vector{Vector{Int64}}},β::Int64,
 
     refSet2 = Vector{Vector{Int64}}[]
 
-    meilleures_z1 = sort(solutions,by = sol -> evaluate_solution(sol,d,c,b,s)[1])
-    meilleures_z2 = sort(solutions,by = sol -> evaluate_solution(sol,d,c,b,s)[2])
+    meilleures_z1 = sort(solutions,by = sol -> evaluate_solution(1,sol,d,c,b,s))
+    meilleures_z2 = sort(solutions,by = sol -> evaluate_solution(2,sol,d,c,b,s))
 
     refSet1 = [meilleures_z1[k] for k in 1:Int(β/2)]
     i = 1

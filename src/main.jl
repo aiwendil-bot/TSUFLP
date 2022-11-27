@@ -33,7 +33,7 @@ function main()
 
     P = 60
 
-    β = Int(P/2)
+    β = 6
 
     #génération coûts
     distances = generation_matrice_distance(coord_terminaux,coord_clvl1)
@@ -50,9 +50,9 @@ function main()
     solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, λ, P)
     
 
-    graph_sol(coord_terminaux, coord_clvl1, coord_clvl2, solutions)
+    #graph_sol(coord_terminaux, coord_clvl1, coord_clvl2, solutions)
     
-    objective_values = [evaluate_solution(k,distances,c,b,s) for k in solutions]
+    objective_values = [evaluate_solution(3,k,distances,c,b,s) for k in solutions]
     z = [[objective_values[k][1] for k in 1:length(objective_values)], [objective_values[k][2] for k in 1:length(objective_values)] ] 
     pop = scatter([z[1][k] for k in 1:Int(P/3)],[z[2][k] for k in 1:Int(P/3)],label="lead obj 1", mc=:blue)
     scatter!([z[1][k] for k in 1+Int(P/3):Int(2*P/3)],[z[2][k] for k in 1+Int(P/3):Int(2*P/3)],label="lead obj 2", mc=:red)
@@ -80,10 +80,9 @@ function main()
     =#
 
     refSets = update_refset(first_improvment,β, b,c, s, distances)
-    println(length(refSets[1]))
-    println(length(refSets[2]))
-    objective_values1 = [evaluate_solution(k,distances,c,b,s) for k in refSets[1]]                       
-    objective_values2 = [evaluate_solution(k,distances,c,b,s) for k in refSets[2]]
+
+    objective_values1 = [evaluate_solution(3,k,distances,c,b,s) for k in refSets[1]]                       
+    objective_values2 = [evaluate_solution(3,k,distances,c,b,s) for k in refSets[2]]
 
     pop_refset = scatter([objective_values1[k][1] for k in 1:β], [objective_values1[k][2] for k in 1:β], label="RefSet1", mc=:blue)
     scatter!([objective_values2[k][1] for k in 1:β], [objective_values2[k][2] for k in 1:β], label="RefSet2", mc=:red)
