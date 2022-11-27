@@ -130,10 +130,23 @@ function gain_shift(obj::Int64, solInit::Vector{Vector{Int64}},solModif::Vector{
 
         clvl2_depart = solInit[2][clvl1_depart]
         clvl2_arrivee = solModif[2][clvl1_arrivee]
-
+        #=
+        println(clvl1_depart)
+        println(clvl1_arrivee)
+        println(clvl2_depart)
+        println(clvl2_arrivee)
+        =#
         gain += c[terminal,clvl1_arrivee] - c[terminal,clvl1_depart]
-        gain += b[clvl1_arrivee,clvl2_arrivee] - b[clvl1_depart,clvl2_depart]
-        gain += s[clvl2_arrivee] - s[clvl2_depart]
+
+        
+        if clvl2_depart == 0
+            gain += b[clvl1_arrivee,clvl2_arrivee] + s[clvl2_arrivee]
+
+        else    
+
+            gain += b[clvl1_arrivee,clvl2_arrivee] - b[clvl1_depart,clvl2_depart]
+            gain += s[clvl2_arrivee] - s[clvl2_depart]
+        end
         
     else
 
@@ -144,4 +157,50 @@ function gain_shift(obj::Int64, solInit::Vector{Vector{Int64}},solModif::Vector{
 
     return gain
 
-end                    
+end              
+
+function gain_swap(obj::Int64, solInit::Vector{Vector{Int64}},solModif::Vector{Vector{Int64}},
+    clvl1_depart::Int64,clvl1_arrivee::Int64,c::Array{Float64,2},b::Array{Float64,2},s::Vector{Float64},
+    d::Array{Float64,2})
+
+    gain = 0               
+    clvl2_depart = solInit[2][clvl1_depart]
+        clvl2_arrivee = solModif[2][clvl1_arrivee] 
+    if obj == 1
+
+        
+        #=
+        println(clvl1_depart)
+        println(clvl1_arrivee)
+        println(clvl2_depart)
+        println(clvl2_arrivee)
+        =#
+        gain += sum([c[i,clvl1_arrivee] for i in 1:length(solInit[1]) if solModif[1][i] == clvl1_arrivee])
+                - sum([c[i,clvl1_depart] for i in 1:length(solInit[1]) if solInit[1][i] == clvl1_depart])
+
+                if clvl2_depart == 0
+                    gain += b[clvl1_arrivee,clvl2_arrivee] + s[clvl2_arrivee]
+        
+                else    
+        
+                    gain += b[clvl1_arrivee,clvl2_arrivee] - b[clvl1_depart,clvl2_depart]
+                    gain += s[clvl2_arrivee] - s[clvl2_depart]
+                end     
+    else
+
+
+        gain += maximum([d[i,clvl1_arrivee] for i in 1:length(solModif[1]) if solModif[1][i] == clvl1_arrivee ]) - 
+                maximum([d[i,clvl1_depart] for i in 1:length(solInit[1]) if solInit[1][i] == clvl1_depart])
+        
+    end    
+
+    return gain
+
+end    
+
+
+function distance_solutions(sol1::Vector{Vector{Int64}},sol2::Vector{Vector{Int64}})::Int64
+
+    return length(setdiff(sol1[3],sol2[3])) + length(setdiff(sol2[3],sol1[3])) 
+
+end

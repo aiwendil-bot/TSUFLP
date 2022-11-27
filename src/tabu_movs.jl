@@ -57,13 +57,15 @@ Swap: Interchange les terminaux assignés à 2 concentrateurs différents
 
 =#
 
-function swap!(sol::Vector{Vector{Int64}},conc_depart::Int64,
+function swap(solInit::Vector{Vector{Int64}},conc_depart::Int64,
     conc_arrivee::Int64,b::Array{Float64,2},s::Vector{Float64})
     
+    sol = deepcopy(solInit)
+
     #si conc_arrivee est déjà ouvert on ne fait rien
 
     if conc_arrivee in sol[3]
-        return nothing
+        return sol
     end
 
     #on ferme conc_depart
@@ -99,6 +101,6 @@ function swap!(sol::Vector{Vector{Int64}},conc_depart::Int64,
         push!(sol[4],clvl2_moins_cher)
     end
 
-    return nothing
+    return sol
 
 end
