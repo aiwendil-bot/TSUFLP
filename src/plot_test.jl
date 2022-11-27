@@ -36,7 +36,6 @@ function graph_sol(coord_t, coord_clvl1, coord_clvl2, sol)
 	#connect_points(pt1,pt2)
 	#display(a)
 	#println("press")
-	#readline()
 	clvl1_aff_term = sol[1][1]
 	i = 1
 	#println("clv1 aff term")

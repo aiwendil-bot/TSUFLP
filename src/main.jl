@@ -28,7 +28,7 @@ function main()
 
     λ::Float64 = 0.5
 
-    P = 300
+    P = 3
 
     #génération coûts
     distances = generation_matrice_distance(coord_terminaux,coord_clvl1)
@@ -44,7 +44,14 @@ function main()
 
     solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, λ, P)
 
-    
+    println("press any key to display the solution graph")
+    readline()
+    graph_sol(coord_terminaux, coord_clvl1, coord_clvl2, solutions)
+    println("press any key to display the objective space")
+    readline()
+    coord_clvl1 = readdlm("data/clvl1.txt")
+    coord_clvl2 = readdlm("data/clvl2.txt")
+    #display(solutions[1])
 
     objective_values = [evaluate_solution(k,distances,c,b,s) for k in solutions]
     z = [[objective_values[k][1] for k in 1:length(objective_values)], [objective_values[k][2] for k in 1:length(objective_values)] ] 
@@ -54,6 +61,7 @@ function main()
     xlabel!(L"z_1")
     ylabel!(L"z_2")
 
+    
 end
 
 main()
