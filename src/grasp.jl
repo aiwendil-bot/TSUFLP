@@ -155,6 +155,7 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
         CL_CLVL1 = deepcopy(J) #on initialise la candidate list à J
         #choisir un CLVL1 au hasard
         random_first = rand(J)
+        push!(sol[3], random_first)
         
         # on ajoute le candidat a la liste des concetrateurs ouverts
         #=

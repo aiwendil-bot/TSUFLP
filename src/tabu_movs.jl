@@ -12,7 +12,7 @@ function shift(solInit::Vector{Vector{Int64}},Q::Int64, terminal::Int64,conc_dep
     end    
 
     #si c était le dernier terminal affecté à ce conc_depart, on le ferme
-
+    
     if length(findall(x -> x == conc_depart,sol[1])) == 1
         deleteat!(sol[3], findfirst(x->x==conc_depart,sol[3]))
 

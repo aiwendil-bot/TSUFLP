@@ -23,7 +23,7 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
     tabu_list = [sol for i in 1:tenure]
     start = time()
     timelim = 1
-    while (time()<start + timelim)
+    while cpt_pas_amelioration < k*length(sol[2]) #(time()<start + timelim)
 
         neighborhood = getNeighbors_swap(best_candidate,b,s)
         #neighborhood = getNeighbors_shift(best_candidate,Q,b,s)
@@ -55,36 +55,38 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
 
         if !found_amelio
             best_candidate = tabu_list[findmin(x -> evaluate_solution(obj,x,d,c,b,s),tabu_list)[2]]
-            cpt_pas_amelioration += 1  
+            cpt_pas_amelioration += 1
 
         else 
             if evaluate_solution(obj,best_candidate,d,c,b,s) < evaluate_solution(obj,best_solution,d,c,b,s)
                 best_solution = best_candidate
                 cpt_pas_amelioration = 0
+            else
+                cpt_pas_amelioration += 1
+
             end
         end
 
         tabu_list[(nb_iterations+1)%tenure + 1] = best_candidate
         nb_iterations += 1
-        #=
-        println(cpt_pas_amelioration)
-        if (nb_iterations % 10 == 0)
-            println(evaluate_solution(best_solution,d,c,b,s))
-        end    
-        =#
+        
+        
+        
     end
 
     return best_solution
 end
 
 function getNeighbors_shift(sol::Vector{Vector{Int64}},Q::Int64,
-                            b::Array{Float64,2},s::Vector{Float64})::Vector{Vector{Vector{Vector{Int64}}}}
+                            b::Array{Float64,2},s::Vector{Float64})::Vector{Vector{Vector{Int64}}}
     
-    neighbors = Array{Vector{Vector{Vector{Int64}}},2}(undef,(length(sol[1]),length(sol[2])))
+    conc_possibles = [j for j in eachindex(sol[2]) if length(findall(x -> x == j,sol[1])) != Q ]
+
+    neighbors = Array{Vector{Vector{Int64}},2}(undef,(length(sol[1]),length(conc_possibles)))
 
     for i in 1:length(sol[1])
-        for j in 1:length(sol[2])
-            neighbors[i,j] = [[[i,j]],shift(sol,Q,i,sol[1][i],j,b,s)]
+        for j in eachindex(conc_possibles)
+            neighbors[i,j] = shift(sol,Q,i,sol[1][i],conc_possibles[j],b,s)
         end
     end
     
