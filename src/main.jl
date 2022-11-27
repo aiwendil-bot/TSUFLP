@@ -12,6 +12,7 @@ include("recup_data.jl")
 include("grasp.jl")
 include("tabu.jl")
 include("refset.jl")
+include("plot_test.jl")
 
 function main()
 
@@ -48,6 +49,8 @@ function main()
 
     solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, λ, P)
     
+
+    graph_sol(coord_terminaux, coord_clvl1, coord_clvl2, solutions)
     
     objective_values = [evaluate_solution(k,distances,c,b,s) for k in solutions]
     z = [[objective_values[k][1] for k in 1:length(objective_values)], [objective_values[k][2] for k in 1:length(objective_values)] ] 
