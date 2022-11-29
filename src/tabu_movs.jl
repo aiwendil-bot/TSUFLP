@@ -5,6 +5,8 @@
 function shift(solInit::Vector{Vector{Int64}},Q::Int64, terminal::Int64,conc_depart::Int64,conc_arrivee::Int64,
                 b::Array{Float64,2},s::Vector{Float64})
 
+    
+
     #si le conc_arrivee est déjà saturé on ne fait rien
     sol = deepcopy(solInit)
     if length(findall(x -> x == conc_arrivee,sol[1])) == Q
@@ -62,13 +64,22 @@ function swap(solInit::Vector{Vector{Int64}},conc_depart::Int64,
     
     sol = deepcopy(solInit)
 
+    #si le conc départ n'est pas ouvert on inverse les concentrateurs
+
+
+    
+    if !(conc_depart in sol[3])
+        conc_depart, conc_arrivee = conc_arrivee, conc_depart
+    end    
+
     #si conc_arrivee est déjà ouvert on ne fait rien
 
-    if conc_arrivee in sol[3]
+    if conc_arrivee in sol[3] || ( !(conc_depart in sol[3]) && !(conc_arrivee in sol[3]))
         return sol
     end
 
     #on ferme conc_depart
+
 
     deleteat!(sol[3], findfirst(x->x==conc_depart,sol[3]))
 

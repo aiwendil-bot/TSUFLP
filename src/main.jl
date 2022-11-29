@@ -31,10 +31,13 @@ function main()
 
     λ::Float64 = 0.5
 
-    P = 60
+    P = 150
+
+    tenure = 7
+
+    k = 0.5
 
     β = 6
-
     #génération coûts
     distances = generation_matrice_distance(coord_terminaux,coord_clvl1)
     
@@ -46,7 +49,7 @@ function main()
     b = generation_matrice_b(distances_concentrators,couts_clvl1)
 
     s = generation_couts_ouverture_clvl(size(coord_clvl2,1))
-
+    println("generation pop de taille $P w/ grasp")
     solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, λ, P)
 
     #graph_sol(coord_terminaux, coord_clvl1, coord_clvl2, solutions)
@@ -58,15 +61,17 @@ function main()
     scatter!([z[1][k] for k in 1+Int(2*P/3):P],[z[2][k] for k in 1+Int(2*P/3):P],label="compromis", mc=:violet)
     xlabel!(L"z_1")
     ylabel!(L"z_2")
-
+    xlims!(150,300)
+    ylims!(8,35)
     savefig(pop,"out/population.png")
 
     
 
     #tabu_test = @time tabu(1, solutions[1],Q,7,0.5, c,b,s, distances)
+    println("tabu 1st population, k = $k, tenure = $tenure")
+    first_improvment = @time vcat([tabu(1,solutions[i],Q,tenure,k,c,b,s,distances) for i in 1:Int(P/2)],
+                            [tabu(2,solutions[i],Q,tenure,k,c,b,s,distances) for i in 1+Int(P/2):P])
 
-    first_improvment = @time vcat([tabu(1,solutions[k],Q,7,0.2,c,b,s,distances) for k in 1:Int(P/2)],
-                            [tabu(2,solutions[k],Q,7,0.2,c,b,s,distances) for k in 1+Int(P/2):P])
     
     objective_values = [evaluate_solution(3,k,distances,c,b,s) for k in first_improvment]                       
     z = [[objective_values[k][1] for k in eachindex(objective_values)], [objective_values[k][2] for k in eachindex(objective_values)] ] 
@@ -75,9 +80,11 @@ function main()
     scatter!([z[1][k] for k in 1+Int(2*P/3):P],[z[2][k] for k in 1+Int(2*P/3):P],label="compromis", mc=:violet)
     xlabel!(L"z_1")
     ylabel!(L"z_2")
+    xlims!(150,300)
+    ylims!(8,35)
     savefig(pop_improv,"out/population_improv_swap.png")
     
-
+    println("calcul refsets, β = $β")
     refSets = @time update_refset(first_improvment,β, b,c, s, distances)
 
     objective_values1 = [evaluate_solution(3,k,distances,c,b,s) for k in refSets[1]]                       
@@ -87,6 +94,8 @@ function main()
     scatter!([objective_values2[k][1] for k in 1:β], [objective_values2[k][2] for k in 1:β], label="RefSet2", mc=:red)
     xlabel!(L"z_1")
     ylabel!(L"z_2")
+    xlims!(150,300)
+    ylims!(8,35)
     savefig(pop_refset,"out/refSets.png")
 end
 

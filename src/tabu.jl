@@ -20,42 +20,71 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
     nb_iterations = 1
     best_solution = deepcopy(sol)
     best_candidate = deepcopy(sol)
-    tabu_list = [sol for i in 1:tenure]
+    tabu_list = []
     start = time()
     timelim = 1
     while cpt_pas_amelioration < k*length(sol[2]) #(time()<start + timelim)
-
+        #=
         neighborhood = getNeighbors_swap(best_candidate,b,s)
         #neighborhood = getNeighbors_shift(best_candidate,Q,b,s)
         best_candidate = neighborhood[1]
+        =#
         found_amelio = false
         i = 1
-
+        j = 1
         #performs the first non-tabu move that leads to an improvement of the current solution
         # or a tabu move that reaches the aspiration move (< best solution)
-        while !found_amelio && i < length(neighborhood)
-            
-            if !(neighborhood[i] in tabu_list)
-                #display(neighborhood[i][2])
-                if evaluate_solution(obj,neighborhood[i],d,c,b,s) < evaluate_solution(obj,best_candidate,d,c,b,s)
-                #if gain_swap(obj,best_candidate,neighborhood[i][2],neighborhood[i][1][1][1],neighborhood[i][1][1][2],c,b,s,d) < 0
-                found_amelio = true
-                    best_candidate = neighborhood[i]
-                end
-            else
 
-                if evaluate_solution(obj,neighborhood[i],d,c,b,s) < evaluate_solution(obj,best_solution,d,c,b,s)
-                    best_candidate = neighborhood[i]
-                    found_amelio = true
-                end    
-            end
+
+        while !found_amelio && i < length(best_candidate[3])
+            
+            while !found_amelio && j < length(setdiff(1:length(sol[2]),sol[3]))
+
+                neighbor = swap(best_candidate,best_candidate[3][i],setdiff(1:length(best_candidate[2]),best_candidate[3])[j],b,s)
+
+            
+                if !([i,j] in tabu_list)
+                    #display(neighborhood[i][2])
+                    if evaluate_solution(obj,neighbor,d,c,b,s) < evaluate_solution(obj,best_candidate,d,c,b,s)
+                    #if gain_swap(obj,best_candidate,neighborhood[i][2],neighborhood[i][1][1][1],neighborhood[i][1][1][2],c,b,s,d) < 0
+                        found_amelio = true
+                        best_candidate = neighbor
+                    end
+                else
+
+                    if evaluate_solution(obj,neighbor,d,c,b,s) < evaluate_solution(obj,best_solution,d,c,b,s)
+                        best_candidate = neighbor
+                        found_amelio = true
+                    end    
+                end
+
+                j += 1
+            end    
             
             i += 1
         end
 
         if !found_amelio
-            best_candidate = tabu_list[findmin(x -> evaluate_solution(obj,x,d,c,b,s),tabu_list)[2]]
+
+            if !isempty(tabu_list)
+            
+            
+                least_worst_move = tabu_list[findmin(move -> 
+                                    evaluate_solution(obj,swap(best_candidate,move[1],move[2],b,s),d,c,b,s),tabu_list)[2]]
+                #best_candidate = tabu_list[findmin(x -> evaluate_solution(obj,x,d,c,b,s),tabu_list)[2]]
+                best_candidate =swap(best_candidate,least_worst_move[1],least_worst_move[2],b,s)
+            
+                if length(tabu_list) < tenure
+                    push!(tabu_list,least_worst_move)
+                else    
+                    tabu_list[(nb_iterations+1)%tenure + 1] = least_worst_move
+            
+                end
+
+            end 
             cpt_pas_amelioration += 1
+
+
 
         else 
             if evaluate_solution(obj,best_candidate,d,c,b,s) < evaluate_solution(obj,best_solution,d,c,b,s)
@@ -65,10 +94,16 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
                 cpt_pas_amelioration += 1
 
             end
-        end
-
-        tabu_list[(nb_iterations+1)%tenure + 1] = best_candidate
+            if length(tabu_list) < tenure
+                push!(tabu_list,[best_candidate[3][i],setdiff(1:length(best_candidate[2]),best_candidate[3])[j]])
+            else    
+                tabu_list[(nb_iterations+1)%tenure + 1] = [best_candidate[3][i],setdiff(1:length(best_candidate[2]),best_candidate[3])[j]]
+        
+            end
+        end    
+        #tabu_list[(nb_iterations+1)%tenure + 1] = best_candidate
         nb_iterations += 1
+
         
         
         
