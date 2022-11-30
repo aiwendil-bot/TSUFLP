@@ -1,6 +1,6 @@
 
 
-function update_refset(solutions::Vector{Vector{Vector{Int64}}},β::Int64,
+function create_refset(solutions::Vector{Vector{Vector{Int64}}},β::Int64,
                             b::Array{Float64,2},c::Array{Float64,2}, s::Vector{Float64}, 
                             d::Array{Float64,2})::Vector{Vector{Vector{Vector{Int64}}}}
 
@@ -47,3 +47,45 @@ function update_refset(solutions::Vector{Vector{Vector{Int64}}},β::Int64,
 
 
 end
+
+
+function update_refset!(solutions::Vector{Vector{Vector{Int64}}}, refset::Vector{Vector{Vector{Vector{Int64}}}},
+    β::Int64, b::Array{Float64,2},c::Array{Float64,2}, s::Vector{Float64}, 
+    d::Array{Float64,2},Q::Int64)::Bool
+
+
+    flag_improv = false
+
+    for candidate in solutions
+
+        if isFeasible(candidate,Q)
+
+            index_dominees_obj1 = [k for k in eachindex(refset[1]) 
+                            if evaluate_solution(1,candidate,d,c,b,s) < evaluate_solution(1,refset[1][k],d,c,b,s) ]
+
+            if !(isempty(index_dominees_obj1))
+                flag_improv = true
+
+                index_remplacement = index_dominees_obj1[findmin([distance_solutions(refset[1][k],candidate) for k in index_dominees_obj1])[2]]
+                refset[2][index_remplacement] = candidate
+            end
+
+            if !flag_improv
+
+                index_dominees_obj2 = [k for k in eachindex(refset[2]) 
+                if evaluate_solution(2,candidate,d,c,b,s) < evaluate_solution(2,refset[2][k],d,c,b,s) ]
+
+                if !(isempty(index_dominees_obj2))
+                    flag_improv = true
+
+                    index_remplacement = index_dominees_obj2[findmin([distance_solutions(refset[2][k],candidate) for k in index_dominees_obj2])[2]]
+                    refset[2][index_remplacement] = candidate
+                end
+            end
+
+        end
+    end        
+
+    return !flag_improv
+end    
+

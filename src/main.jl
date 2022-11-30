@@ -13,6 +13,8 @@ include("grasp.jl")
 include("tabu.jl")
 include("refset.jl")
 include("plot_test.jl")
+include("path_relinking.jl")
+include("isFeasible.jl")
 
 function main()
 
@@ -69,7 +71,7 @@ function main()
 
     #tabu_test = @time tabu(1, solutions[1],Q,7,0.5, c,b,s, distances)
     println("tabu 1st population, k = $k, tenure = $tenure")
-    first_improvment = @time vcat([tabu(1,solutions[i],Q,tenure,k,c,b,s,distances) for i in 1:Int(P/2)],
+    first_improvment = @time vcat([ tabu(1,solutions[i],Q,tenure,k,c,b,s,distances) for i in 1:Int(P/2)],
                             [tabu(2,solutions[i],Q,tenure,k,c,b,s,distances) for i in 1+Int(P/2):P])
 
     
@@ -85,18 +87,34 @@ function main()
     savefig(pop_improv,"out/population_improv_swap.png")
     
     println("calcul refsets, β = $β")
-    refSets = @time update_refset(first_improvment,β, b,c, s, distances)
+    refSets = @time create_refset(first_improvment,β, b,c, s, distances)
 
     objective_values1 = [evaluate_solution(3,k,distances,c,b,s) for k in refSets[1]]                       
     objective_values2 = [evaluate_solution(3,k,distances,c,b,s) for k in refSets[2]]
 
-    pop_refset = scatter([objective_values1[k][1] for k in 1:β], [objective_values1[k][2] for k in 1:β], label="RefSet1", mc=:blue)
+    pop_refset = scatter([objective_values1[k][1] for k in 1:β], [objective_values1[k][2] for k in 1:β], label="RefSet1", mc=:blue,legend=false)
     scatter!([objective_values2[k][1] for k in 1:β], [objective_values2[k][2] for k in 1:β], label="RefSet2", mc=:red)
     xlabel!(L"z_1")
     ylabel!(L"z_2")
     xlims!(150,300)
     ylims!(8,35)
     savefig(pop_refset,"out/refSets.png")
+
+    for i in refSets[1]
+        for j in refSets[2]
+            sols_intermediaires = @time path_relinking(i,j,[],Q,c,b,distances,s)
+            #println(length(sols_intermediaires))
+            #println(length([k for k in sols_intermediaires if isFeasible(k,Q)]))
+
+
+            scatter!([evaluate_solution(1,sols_intermediaires[k],distances,c,b,s) for k in 1:(length(sols_intermediaires)-1)],
+             [evaluate_solution(2,sols_intermediaires[k],distances,c,b,s) for k in 1:(length(sols_intermediaires)-1)],mc=:orange) 
+        end    
+    end     
+    
+    savefig(pop_refset,"out/path_relinking.png")
+
+
 end
 
 main()

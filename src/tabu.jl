@@ -9,7 +9,14 @@ include("tabu_movs.jl")
 
 #=
 
-procède à une recherche tabou
+tabu selon l'obj en paramètre
+
+mouvement : swap (fermer un cclvl1 et ouvrir un autre, et transférer les terminaux)
+
+critère d'arrêt : k*nb de cclvl1 itérations sans améliorer best_solutions (k=0.5 pour l'instant, à tuner)
+
+critère d'aspiration : < best solution
+
 
 =#
 
@@ -21,14 +28,8 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
     best_solution = deepcopy(sol)
     best_candidate = deepcopy(sol)
     tabu_list = []
-    start = time()
-    timelim = 1
-    while cpt_pas_amelioration < k*length(sol[2]) #(time()<start + timelim)
-        #=
-        neighborhood = getNeighbors_swap(best_candidate,b,s)
-        #neighborhood = getNeighbors_shift(best_candidate,Q,b,s)
-        best_candidate = neighborhood[1]
-        =#
+    while cpt_pas_amelioration < k*length(sol[2])
+
         found_amelio = false
         i = 1
         j = 1
@@ -51,7 +52,7 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
                         best_candidate = neighbor
                     end
                 else
-
+                    #critère d'aspiration
                     if evaluate_solution(obj,neighbor,d,c,b,s) < evaluate_solution(obj,best_solution,d,c,b,s)
                         best_candidate = neighbor
                         found_amelio = true

@@ -53,7 +53,7 @@ end
 #=
 Swap: Interchange les terminaux assignés à 2 concentrateurs différents
  -> on peut swaper avec un CLVL1 fermé:
-   - ouvrir le CLVL1 d'arrivé
+   - ouvrir le CLVL1 d'arrivée
    - transférer les terminaux affectés
    - fermer le CLVL1 de départ
 
@@ -114,4 +114,23 @@ function swap(solInit::Vector{Vector{Int64}},conc_depart::Int64,
 
     return sol
 
+end
+
+function swap2(solInit::Vector{Vector{Int64}},conc_in::Int64,conc_out::Int64)::Vector{Vector{Int64}}
+
+    sol = deepcopy(solInit)
+    if !(conc_in in sol[4])
+    push!(sol[4],conc_in)
+    end
+    deleteat!(sol[4], findfirst(x -> x==conc_out,sol[4]))
+
+    for k in eachindex(sol[2])
+        if sol[2][k] == conc_out
+            sol[2][k] = conc_in
+        end
+    end
+    
+    return sol
+
+    
 end

@@ -211,6 +211,7 @@ end
 
 function distance_solutions(sol1::Vector{Vector{Int64}},sol2::Vector{Vector{Int64}})::Int64
 
-    return length(setdiff(sol1[3],sol2[3])) + length(setdiff(sol2[3],sol1[3])) 
+    return length(setdiff(sol1[3],sol2[3])) + length(setdiff(sol2[3],sol1[3])) +
+           length(setdiff(sol1[4],sol2[4])) + length(setdiff(sol2[4],sol1[4]))
 
 end
