@@ -315,7 +315,7 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
     end
 
     solutions = Vector{Vector{Vector{Int64}}}(undef, P)
-
+    #=
     for k in 1:Int(P/3)
         solutions[k] = genSol1(I, J, K, Q, b, c, s, a)
     end
@@ -326,6 +326,28 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
 
     for k in Int(2*P/3)+1:P
         solutions[k] = genSol_compromis(I,J,K,Q,b,c,s,d,a, λ)
+    end
+
+    =#
+
+    for k in 1:Int(P/5)
+        solutions[k] = genSol1(I, J, K, Q, b, c, s, a)
+    end
+    
+    for k in Int(P/5)+1:Int(2*P/5)
+        solutions[k] = genSol_compromis(I,J,K,Q,b,c,s,d,a, 0.75)
+    end
+
+    for k in Int(2*P/5)+1:Int(3*P/5)
+        solutions[k] = genSol_compromis(I,J,K,Q,b,c,s,d,a, 0.5)
+    end
+
+    for k in Int(3*P/5)+1:Int(4*P/5)
+        solutions[k] = genSol_compromis(I,J,K,Q,b,c,s,d,a, 0.25)
+    end
+
+    for k in Int(4*P/5)+1:P
+        solutions[k] = genSol2(I, J, K, Q, b, s, d, a)
     end
     
     return solutions

@@ -15,6 +15,7 @@ include("refset.jl")
 include("plot_test.jl")
 include("path_relinking.jl")
 include("isFeasible.jl")
+#include("SkipList.jl")
 
 function main()
 
@@ -58,14 +59,17 @@ function main()
     
     objective_values = [evaluate_solution(3,k,distances,c,b,s) for k in solutions]
     z = [[objective_values[k][1] for k in eachindex(objective_values)], [objective_values[k][2] for k in eachindex(objective_values)] ] 
-    pop = scatter([z[1][k] for k in 1:Int(P/3)],[z[2][k] for k in 1:Int(P/3)],label="lead obj 1", mc=:blue)
-    scatter!([z[1][k] for k in 1+Int(P/3):Int(2*P/3)],[z[2][k] for k in 1+Int(P/3):Int(2*P/3)],label="lead obj 2", mc=:red)
-    scatter!([z[1][k] for k in 1+Int(2*P/3):P],[z[2][k] for k in 1+Int(2*P/3):P],label="compromis", mc=:violet)
+    pop = scatter([z[1][k] for k in 1:Int(P/5)],[z[2][k] for k in 1:Int(P/5)],label="λ = 1", mc=:blue)
+    scatter!([z[1][k] for k in 1+Int(P/5):Int(2*P/5)],[z[2][k] for k in 1+Int(P/3):Int(2*P/3)],label="λ = 0.75", mc=:cyan)
+    scatter!([z[1][k] for k in 1+Int(2*P/5):Int(3*P/5)],[z[2][k] for k in 1+Int(2*P/5):Int(3*P/5)],label="λ = 0.5", mc=:green)
+    scatter!([z[1][k] for k in 1+Int(3*P/5):Int(4*P/5)],[z[2][k] for k in 1+Int(3*P/5):Int(4*P/5)],label="λ = 0.25", mc=:orange)
+    scatter!([z[1][k] for k in 1+Int(4*P/5):P],[z[2][k] for k in 1+Int(4*P/5):P],label="λ = 0", mc=:red)
+
     xlabel!(L"z_1")
     ylabel!(L"z_2")
     xlims!(150,300)
     ylims!(8,35)
-    savefig(pop,"out/population.png")
+    savefig(pop,"out/swap/population.png")
 
     
 
@@ -77,14 +81,16 @@ function main()
     
     objective_values = [evaluate_solution(3,k,distances,c,b,s) for k in first_improvment]                       
     z = [[objective_values[k][1] for k in eachindex(objective_values)], [objective_values[k][2] for k in eachindex(objective_values)] ] 
-    pop_improv = scatter([z[1][k] for k in 1:Int(P/3)],[z[2][k] for k in 1:Int(P/3)],label="lead obj 1", mc=:blue)
-    scatter!([z[1][k] for k in 1+Int(P/3):Int(2*P/3)],[z[2][k] for k in 1+Int(P/3):Int(2*P/3)],label="lead obj 2", mc=:red)
-    scatter!([z[1][k] for k in 1+Int(2*P/3):P],[z[2][k] for k in 1+Int(2*P/3):P],label="compromis", mc=:violet)
+    pop_improv = scatter([z[1][k] for k in 1:Int(P/5)],[z[2][k] for k in 1:Int(P/5)],label="λ = 1", mc=:blue)
+    scatter!([z[1][k] for k in 1+Int(P/5):Int(2*P/5)],[z[2][k] for k in 1+Int(P/3):Int(2*P/3)],label="λ = 0.75", mc=:cyan)
+    scatter!([z[1][k] for k in 1+Int(2*P/5):Int(3*P/5)],[z[2][k] for k in 1+Int(2*P/5):Int(3*P/5)],label="λ = 0.5", mc=:green)
+    scatter!([z[1][k] for k in 1+Int(3*P/5):Int(4*P/5)],[z[2][k] for k in 1+Int(3*P/5):Int(4*P/5)],label="λ = 0.25", mc=:orange)
+    scatter!([z[1][k] for k in 1+Int(4*P/5):P],[z[2][k] for k in 1+Int(4*P/5):P],label="λ = 0", mc=:red)
     xlabel!(L"z_1")
     ylabel!(L"z_2")
     xlims!(150,300)
     ylims!(8,35)
-    savefig(pop_improv,"out/population_improv_swap.png")
+    savefig(pop_improv,"out/swap/population_improv.png")
     
     println("calcul refsets, β = $β")
     refSets = @time create_refset(first_improvment,β, b,c, s, distances)
@@ -98,11 +104,11 @@ function main()
     ylabel!(L"z_2")
     xlims!(150,300)
     ylims!(8,35)
-    savefig(pop_refset,"out/refSets.png")
+    savefig(pop_refset,"out/swap/refSets.png")
 
     for i in refSets[1]
         for j in refSets[2]
-            sols_intermediaires = @time path_relinking(i,j,[],Q,c,b,distances,s)
+            sols_intermediaires = @time path_relinking!(i,j,[],Q,c,b,distances,s)
             #println(length(sols_intermediaires))
             #println(length([k for k in sols_intermediaires if isFeasible(k,Q)]))
 

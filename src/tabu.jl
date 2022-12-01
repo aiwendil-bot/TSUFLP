@@ -31,12 +31,16 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
     while cpt_pas_amelioration < k*length(sol[2])
 
         found_amelio = false
-        i = 1
-        j = 1
+
         #performs the first non-tabu move that leads to an improvement of the current solution
         # or a tabu move that reaches the aspiration move (< best solution)
 
+        # VOISINAGE = SWAP
+        
+        i = 1
+        j = 1
 
+        
         while !found_amelio && i < length(best_candidate[3])
             
             while !found_amelio && j < length(setdiff(1:length(sol[2]),sol[3]))
@@ -64,6 +68,47 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
             
             i += 1
         end
+        
+        
+
+        # VOISINAGE = Shift
+
+        #=
+
+        conc_possibles = [j for j in eachindex(sol[2]) if length(findall(x -> x == j,sol[1])) != Q ]
+
+        i = 1
+        j = conc_possibles[1]
+
+        while !found_amelio && i < length(best_candidate[1])
+            
+            while !found_amelio && j < length(conc_possibles)
+
+                neighbor = shift(best_candidate,Q, i,best_candidate[1][i],conc_possibles[j], b,s)
+
+            
+                if !([i,j] in tabu_list)
+                    #display(neighborhood[i][2])
+                    if evaluate_solution(obj,neighbor,d,c,b,s) < evaluate_solution(obj,best_candidate,d,c,b,s)
+                    #if gain_swap(obj,best_candidate,neighborhood[i][2],neighborhood[i][1][1][1],neighborhood[i][1][1][2],c,b,s,d) < 0
+                        found_amelio = true
+                        best_candidate = neighbor
+                    end
+                else
+                    #critère d'aspiration
+                    if evaluate_solution(obj,neighbor,d,c,b,s) < evaluate_solution(obj,best_solution,d,c,b,s)
+                        best_candidate = neighbor
+                        found_amelio = true
+                    end    
+                end
+
+                j += 1
+            end    
+            
+            i += 1
+        end
+        =#
+        
 
         if !found_amelio
 
