@@ -1,8 +1,8 @@
 #----- Définition des structures -------
 struct Solution
+    terminaux::Vector{Int64}
     f_lvl_concentrators::Vector{Int64}
     s_lvl_concentrators::Vector{Int64}
-    locations::Vector{Int64}
 end
 
 mutable struct Point
@@ -201,6 +201,27 @@ function afficher_SL(SL)
 	println(s1)
 end
 
+function get_elems_SL(SL)
+	curs = SL.entree
+	s1 = ""
+	continuer = true
+	while continuer
+		curs = curs.last
+		s2 = string(curs.elem.point)
+		while isdefined(curs.prev,1)
+			curs = curs.prev
+			s2 = string(curs.elem.point) * " -> " * s2
+		end
+		s1 *= s2 * "\n"
+		if isdefined(curs.down,1)
+			curs = curs.down
+		else
+			continuer = false
+		end
+	end
+	println(s1)
+end
+
 # Weighted coin: p compris entre 0 et 1
 function coin(p)
 	return rand() < p
@@ -367,6 +388,6 @@ end
 # - pas d'option = pas d'affichage
 # - "-v" affichage de la SL à la fin des insertions seulement
 # - "-v" max
-const verbose = Ref(false)
-const verbose0 = Ref(false)
+ verbose = Ref(false)
+ verbose0 = Ref(true)
 main(ARGS)

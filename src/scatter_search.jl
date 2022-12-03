@@ -31,6 +31,8 @@ function scatter_search(c::Array{Float64,2},b::Array{Float64,2},s::Vector{Float6
 
     stop_criterion::Bool = false
 
+    cpt_iteration = 1
+
     while !stop_criterion
 
         #subset generation method
@@ -55,16 +57,30 @@ function scatter_search(c::Array{Float64,2},b::Array{Float64,2},s::Vector{Float6
                 tabu2 = tabu(2,sol,Q,tenure,k,c,b,s,d)
                 push!(trial_solutions,tabu1)
                 push!(trial_solutions,tabu2)
-                #vérifier si chacune non dominée
+                if isFeasible(tabu1, Q)
+                    evals = evaluate_solution(3,tabu1,d,c,b,s)
+                    elem = Elem(Point(evals[1],evals[2]),Solution(tabu1[1],tabu1[2],tabu1[3]))
+                    SL_insert!(skiplist,elem,0.5)
+                end
+
+                if isFeasible(tabu2, Q)
+                    evals = evaluate_solution(3,tabu2,d,c,b,s)
+                    elem = Elem(Point(evals[1],evals[2]),Solution(tabu2[1],tabu2[2],tabu2[3]))
+                    SL_insert!(skiplist,elem,0.5)
+                end
+
             end  
         end      
 
         stop_criterion = update_refset!(trial_solutions, refSets, β, b,c, s, d,Q)
 
-        #plot pour voir à chaque itération
+
+
+        cpt_iteration += 1
+        
 
     end
 
-    #return nondominated_solutions
+    return nondominated_solutions
 
 end

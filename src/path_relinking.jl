@@ -31,7 +31,7 @@ include("tabu_movs.jl")
 include("SkipList.jl")
 
 
-function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{Int64}},skiplist,Q::Int64,
+function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{Int64}},skiplist::SkipList,Q::Int64,
                         c::Array{Float64,2},b::Array{Float64,2},d::Array{Float64,2},s::Vector{Float64})
 
     sols_intermediaires = Vector{Vector{Int64}}[]                        
@@ -50,14 +50,14 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
         for i in eachindex(conc1_in)
             for j in eachindex(conc1_out)
                 candidate = swap(sol_transit,conc1_in[i],conc1_out[j],b,s)
-                #=
-                if inserer(skiplist,candidate) #si efficace
+                evals = evaluate_solution(3,candidate,d,c,b,s)
+                elem = Elem(Point(evals[1],evals[2]),Solution(candidate[1],candidate[2],candidate[3]))
+                if SL_insert!(skiplist,elem,0.5) #si efficace
                     push!(moves_nondominated,[i,j])
                 else
                     push!(moves_dominated,[i,j])
                 end
-                =#
-                push!(moves_nondominated,[i,j])
+            
             end
         end
 
@@ -125,15 +125,17 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
         for i in eachindex(conc2_in)
             for j in eachindex(conc2_out)
                 candidate = swap2(sol_transit,conc2_in[i],conc2_out[j])
-                push!(moves_nondominated,[i,j])
-                #=
-                if feasible
-                if inserer(skiplist,candidate) #si efficace
-                    push!(moves_nondominated,[i,j])
-                else
-                    push!(moves_dominated,[i,j])
+                
+                
+                if isFeasible(candidate, Q)
+                    evals = evaluate_solution(3,candidate,d,c,b,s)
+                    elem = Elem(Point(evals[1],evals[2]),Solution(candidate[1],candidate[2],candidate[3]))
+                    if SL_insert!(skiplist,elem,0.5) #si efficace
+                        push!(moves_nondominated,[i,j])
+                    else
+                        push!(moves_dominated,[i,j])
+                    end
                 end
-                =#
             end
         end
         
@@ -160,7 +162,11 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
                 end
 
             end    
-                #inserer(skiplist,sol_transit)
+            if isFeasible(sol_transit, Q)
+                evals = evaluate_solution(3,sol_transit,d,c,b,s)
+                elem = Elem(Point(evals[1],evals[2]),Solution(sol_transit[1],sol_transit[2],sol_transit[3]))
+                SL_insert!(skiplist,elem,0.5)
+            end
                 push!(sols_intermediaires,sol_transit)
 
         end
@@ -177,7 +183,13 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
                 end
             end
             
-            #inserer(skiplist,sol_transit)
+            if isFeasible(sol_transit, Q)
+                
+                evals = evaluate_solution(3,sol_transit,d,c,b,s)
+                elem = Elem(Point(evals[1],evals[2]),Solution(sol_transit[1],sol_transit[2],sol_transit[3]))
+                SL_insert!(skiplist,elem,0.5)
+
+            end
             push!(sols_intermediaires,sol_transit)
 
 
@@ -204,6 +216,12 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
             #inserer(skiplist, sol_transit)
         push!(sols_intermediaires,sol_transit)
 
+        if length(wrong_terminals) % 5 == 0 && isFeasible(sol_transit, Q)
+                evals = evaluate_solution(3,sol_transit,d,c,b,s)
+                elem = Elem(Point(evals[1],evals[2]),Solution(sol_transit[1],sol_transit[2],sol_transit[3]))
+                SL_insert!(skiplist,elem,0.5)
+        end
+
         #end
         
         deleteat!(wrong_terminals, findfirst(x -> x == i, wrong_terminals))
@@ -218,7 +236,11 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
 
         sol_transit[2][i] = solFin[2][i]
 
-        #inserer(skiplist, sol_transit)
+        if isFeasible(sol_transit, Q)
+            evals = evaluate_solution(3,sol_transit,d,c,b,s)
+            elem = Elem(Point(evals[1],evals[2]),Solution(sol_transit[1],sol_transit[2],sol_transit[3]))
+            SL_insert!(skiplist,elem,0.5)
+        end
         push!(sols_intermediaires,sol_transit)
 
         
