@@ -14,7 +14,7 @@ end
 
 mutable struct Elem
 	point::Point
-	#sol::Solution
+	sol::Solution
 	Elem() = new()
 	Elem(pt) = new(pt)
 	Elem(pt,s) = new(pt,s)
@@ -186,10 +186,10 @@ function afficher_SL(SL)
 	continuer = true
 	while continuer
 		curs = curs.last
-		s2 = string(curs.elem)
+		s2 = string(curs.elem.point)
 		while isdefined(curs.prev,1)
 			curs = curs.prev
-			s2 = string(curs.elem) * " -> " * s2
+			s2 = string(curs.elem.point) * " -> " * s2
 		end
 		s1 *= s2 * "\n"
 		if isdefined(curs.down,1)
@@ -206,15 +206,15 @@ function coin(p)
 	return rand() < p
 end
 	
-function SL_insert_up!(SL, new_point, proba)
+function SL_insert_up!(SL, new_elem, proba)
 	# On lance une piece (flip a coin)
 	piece = coin(proba)
 	
-	# Tant qu'on tombe sur face, et qu'on n'a pas atteint le nombre max d'étage, on ajoute new_point dans l'étage supérieur
+	# Tant qu'on tombe sur face, et qu'on n'a pas atteint le nombre max d'étage, on ajoute new_elem.point dans l'étage supérieur
 	#piece = 1
 	while (piece) && (SL.curseur.etage + 1 <= SL.hauteur_max)
 		etage = SL.curseur.etage + 1
-		if verbose[] println("Face! on ajoute le point ", new_point, " a l'étage superieur (", SL.curseur.etage + 1, ")") end
+		if verbose[] println("Face! on ajoute le point ", new_elem.point, " a l'étage superieur (", SL.curseur.etage + 1, ")") end
 		# Si l'étage n'existe on le créer
 		if (SL.curseur.etage + 1 > SL.hauteur)
 			if (SL.hauteur + 1 <= SL.hauteur_max)
@@ -228,11 +228,11 @@ function SL_insert_up!(SL, new_point, proba)
 		else
 			# Sinon on recupere les pointeurs prev et suiv du nouveau point
 			curs_elem = SL.curseur
-			if !(SL_search!(SL, new_point, SL.curseur.etage + 1))
+			if !(SL_search!(SL, new_elem.point, SL.curseur.etage + 1))
 				prev = SL.curseur
 				suiv = prev.next
 				
-				if verbose[] println("Le point ", new_point, " est > a ", prev.elem, " (etage ", prev.etage, ") et < a ", suiv.elem, " (etage ", suiv.etage," )") end
+				if verbose[] println("Le point ", new_elem.point, " est > a ", prev.elem, " (etage ", prev.etage, ") et < a ", suiv.elem, " (etage ", suiv.etage," )") end
 				etage = prev.etage
 				# on recupere le curseur qui pointait sur le nouvel element
 				SL.curseur = curs_elem
@@ -242,8 +242,8 @@ function SL_insert_up!(SL, new_point, proba)
 			end
 		end
 		
-		if verbose[] println("On insere le point ", new_point, " au dessus de ", SL.curseur.elem, " (etage ", SL.curseur.etage, ")", " a l'etage ", etage, " apres ", prev.elem, " (etage ", prev.etage, ") et avant ", suiv.elem, " (etage ", suiv.etage, ")") end
-		SL.curseur.up = Node(Elem(new_point), etage, prev, suiv, Node(), SL.curseur)
+		if verbose[] println("On insere le point ", new_elem.point, " au dessus de ", SL.curseur.elem, " (etage ", SL.curseur.etage, ")", " a l'etage ", etage, " apres ", prev.elem, " (etage ", prev.etage, ") et avant ", suiv.elem, " (etage ", suiv.etage, ")") end
+		SL.curseur.up = Node(Elem(new_elem.point), etage, prev, suiv, Node(), SL.curseur)
 		prev.next = SL.curseur.up
 		suiv.prev = SL.curseur.up
 		
@@ -289,34 +289,40 @@ function SL_remove!(SL, curs1, curs2)
 	end
 end
 	
-function SL_insert!(SL, new_point, proba)
+function SL_insert!(SL, new_elem, proba)
 	# Si le nouveau point n'existe pas et qu'il n'est pas dominé (le curseur aura ete positionne a l'élément immédiatement inférieur)
 	SL.curseur = SL.entree
-	if !(SL_search!(SL, new_point))
-		# on commence par retirer de la SL tous les points dominés par new_point
+	if !(SL_search!(SL, new_elem.point))
+		# on commence par retirer de la SL tous les points dominés par new_elem.point
 		curs1 = SL.curseur
 		curs2 = curs1.next
 		
-		while domine(new_point, curs2.elem.point)
+		while domine(new_elem.point, curs2.elem.point)
 			curs2 = curs2.next
 		end
 		
-		if verbose[] println("Le point ", new_point, " domine tous les points entre ", curs1.elem.point, " a ", curs2.elem.point) end
+		if verbose[] println("Le point ", new_elem.point, " domine tous les points entre ", curs1.elem.point, " a ", curs2.elem.point) end
 		SL_remove!(SL, curs1, curs2)
 		
 		# puis on insere le nouveau point
-		if verbose[] println("Le point ", new_point, " est > a ", SL.curseur.elem.point, " (etage ", SL.curseur.etage, ") et < a ", SL.curseur.next.elem.point, " (etage ", SL.curseur.next.etage," )") end
+		if verbose[] println("Le point ", new_elem.point, " est > a ", SL.curseur.elem.point, " (etage ", SL.curseur.etage, ") et < a ", SL.curseur.next.elem.point, " (etage ", SL.curseur.next.etage," )") end
 		liste_t = SL.curseur.next
 		# Node(element, prev, next, up, down)
-		liste_t.prev = Node(Elem(new_point), SL.curseur.etage, SL.curseur, liste_t, Node(), Node())
+		liste_t.prev = Node(Elem(new_elem.point), SL.curseur.etage, SL.curseur, liste_t, Node(), Node())
 		
 		SL.curseur.next = liste_t.prev
 		
 		SL.curseur = SL.curseur.next
 		
 		if verbose[] println("Apres insertion du point et avant insert up") ; afficher_SL(SL) end
-		ins_status = SL_insert_up!(SL, new_point, proba)
+		ins_status = SL_insert_up!(SL, new_elem, proba)
+		
+		ret = true
+	else
+		ret = false
 	end
+	
+	return ret
 end
 
 function main(args)
@@ -344,10 +350,12 @@ function main(args)
 	# -----------------------------------------
 	# liste des points à insérer (dans l'exemple ici, points[7] domine {points[2], points[3], points[4]} il seront donc filtrer à l'ajout de points[7] dans la Skip List)
 	points = [Point(1,8), Point(3,7), Point(5,6), Point(6,5), Point(7,4), Point(8,3), Point(3,5)]
+	sols = [Solution([2], [1,2,3], [1,2,3,4,5,6]) for i in 1:length(points)]
+	elements = [Elem(points[i],sols[i]) for i in 1:length(points)]
 	
-	for point in points
-		# insertion de chaque point
-		SL_insert!(SL, point, proba)
+	for elem in elements
+		# insertion de chaque elements
+		inser_ok = SL_insert!(SL, elem, proba)
 	end
 	
 	#SL_insert!(SL, points[7], proba)
@@ -361,5 +369,4 @@ end
 # - "-v" max
 const verbose = Ref(false)
 const verbose0 = Ref(false)
-#main(ARGS)
-
+main(ARGS)
