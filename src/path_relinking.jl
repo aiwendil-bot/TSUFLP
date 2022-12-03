@@ -28,6 +28,8 @@
 =#
 
 include("tabu_movs.jl")
+include("SkipList.jl")
+
 
 function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{Int64}},skiplist,Q::Int64,
                         c::Array{Float64,2},b::Array{Float64,2},d::Array{Float64,2},s::Vector{Float64})

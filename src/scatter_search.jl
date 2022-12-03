@@ -1,9 +1,10 @@
+include("SkipList.jl")
 
 
 function scatter_search(c::Array{Float64,2},b::Array{Float64,2},s::Vector{Float64},
     Q::Int64, a::Float64, λ::Float64, P::Int64, tenure::Int64, k::Float64, β::Int64)
 
-    #nondominated_solutions = 
+    nondominated_solutions = SkipList(5) 
     
     # Création de la population initiale
     println("generation pop de taille $P w/ grasp")

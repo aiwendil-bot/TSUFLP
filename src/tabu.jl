@@ -6,7 +6,6 @@ tabu:
 =#
 
 include("tabu_movs.jl")
-
 #=
 
 tabu selon l'obj en paramètre
