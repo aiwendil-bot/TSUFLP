@@ -1,8 +1,8 @@
 #----- Définition des structures -------
 struct Solution
-    terminaux::Vector{Int64}
     f_lvl_concentrators::Vector{Int64}
     s_lvl_concentrators::Vector{Int64}
+    locations::Vector{Int64}
 end
 
 mutable struct Point
@@ -201,27 +201,6 @@ function afficher_SL(SL)
 	println(s1)
 end
 
-function get_elems_SL(SL)
-	curs = SL.entree
-	s1 = ""
-	continuer = true
-	while continuer
-		curs = curs.last
-		s2 = string(curs.elem.point)
-		while isdefined(curs.prev,1)
-			curs = curs.prev
-			s2 = string(curs.elem.point) * " -> " * s2
-		end
-		s1 *= s2 * "\n"
-		if isdefined(curs.down,1)
-			curs = curs.down
-		else
-			continuer = false
-		end
-	end
-	println(s1)
-end
-
 # Weighted coin: p compris entre 0 et 1
 function coin(p)
 	return rand() < p
@@ -321,22 +300,24 @@ function SL_insert!(SL, new_elem, proba)
 		while domine(new_elem.point, curs2.elem.point)
 			curs2 = curs2.next
 		end
-		
+		#=
 		if verbose[] println("Le point ", new_elem.point, " domine tous les points entre ", curs1.elem.point, " a ", curs2.elem.point) end
 		SL_remove!(SL, curs1, curs2)
 		
 		# puis on insere le nouveau point
 		if verbose[] println("Le point ", new_elem.point, " est > a ", SL.curseur.elem.point, " (etage ", SL.curseur.etage, ") et < a ", SL.curseur.next.elem.point, " (etage ", SL.curseur.next.etage," )") end
+		=#
 		liste_t = SL.curseur.next
+		
 		# Node(element, prev, next, up, down)
-		liste_t.prev = Node(Elem(new_elem.point), SL.curseur.etage, SL.curseur, liste_t, Node(), Node())
+		liste_t.prev = Node(Elem(new_elem.point,new_elem.sol), SL.curseur.etage, SL.curseur, liste_t, Node(), Node())
 		
 		SL.curseur.next = liste_t.prev
 		
 		SL.curseur = SL.curseur.next
 		
-		if verbose[] println("Apres insertion du point et avant insert up") ; afficher_SL(SL) end
-		ins_status = SL_insert_up!(SL, new_elem, proba)
+		#if verbose[] println("Apres insertion du point et avant insert up") ; afficher_SL(SL) end
+		#ins_status = SL_insert_up!(SL, new_elem, proba)
 		
 		ret = true
 	else
@@ -344,6 +325,21 @@ function SL_insert!(SL, new_elem, proba)
 	end
 	
 	return ret
+end
+
+function get_elems(SL)
+	elems_etage = SL.entree
+	while elems_etage.etage > 1
+		elems_etage = elems_etage.down
+	end
+	
+	#elems = Vector{Elem}
+	elems = []
+	while isdefined(elems_etage.next.next,1)
+		elems_etage = elems_etage.next
+		push!(elems, elems_etage.elem)
+	end
+	return elems
 end
 
 function main(args)
@@ -381,13 +377,68 @@ function main(args)
 	
 	#SL_insert!(SL, points[7], proba)
 	
-	if verbose0[] afficher_SL(SL) end
+	#if verbose0[] afficher_SL(SL) end
+	
+	for elem in get_elems(SL)
+		println(elem.point.x,elem.point.y)
+	end	
 end
-
+#=
 # Niveau de verbosité du script:
 # - pas d'option = pas d'affichage
 # - "-v" affichage de la SL à la fin des insertions seulement
 # - "-v" max
- verbose = Ref(false)
- verbose0 = Ref(true)
-main(ARGS)
+=#
+const verbose = Ref(false)
+const verbose0 = Ref(false)
+#main(ARGS)
+
+SL = creer_SL(10)
+
+points = [
+Point(168.3545142208328,15.187318492342365),
+Point(169.46109828735206,14.69071603727211),
+Point(169.72556297132422,14.69071603727211),
+Point(170.91871150936404,14.69071603727211),
+Point(171.26798655954192,14.69071603727211),
+Point(172.8676477857883,14.69071603727211),
+Point(173.95153002627484,14.69071603727211),
+Point(174.46231912512445,14.69071603727211),
+Point(174.72232509114127,14.19619308185488),
+Point(174.85542067916018,14.69071603727211),
+Point(177.53687256015618,14.227996652639293),
+Point(177.97780699929052,14.69071603727211),
+Point(178.72840083973605,14.19619308185488),
+Point(178.96029217167398,14.69071603727211),
+Point(180.80506699264845,14.69071603727211),
+Point(180.8492275284766,14.19619308185488),
+Point(181.2126120831682,13.60700437208854),
+Point(182.61264609646742,13.60700437208854),
+Point(182.83441208250906,14.69071603727211),
+Point(187.29338145963618,13.60700437208854),
+Point(187.6672161721941,11.633801195091102),
+Point(191.8898526022217,11.633801195091102),
+Point(193.89864610740207,10.914995322025387),
+Point(202.83591276105273,10.089251458212509),
+Point(203.84742429776918,10.089251458212509),
+Point(210.56752669976802,10.089251458212509),
+Point(215.73415409362167,10.089251458212509),
+Point(221.03484181982031,10.089251458212509),
+Point(227.75253965173957,10.089251458212509),
+Point(234.29194151601004,10.089251458212509),
+Point(240.71109159629634,10.089251458212509),
+Point(246.6607771607848,10.089251458212509),
+Point(253.37896986883388,10.089251458212509),
+Point(260.0990722708327,10.089251458212509)
+]
+
+elements = [Elem(points[i], Solution([],[],[])) for i in 1:length(points)]
+
+for elem in elements
+	# insertion de chaque elements
+	inser_ok = SL_insert!(SL, elem, 0.5)
+end
+
+for elem in get_elems(SL)
+	println(elem.point.x, "  ", elem.point.y)
+end

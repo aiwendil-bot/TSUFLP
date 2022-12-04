@@ -16,6 +16,7 @@ include("plot_test.jl")
 include("path_relinking.jl")
 include("isFeasible.jl")
 #include("SkipList.jl")
+include("scatter_search.jl")
 
 function main()
 
@@ -38,9 +39,9 @@ function main()
 
     tenure = 7
 
-    k = 0.5
+    k = 0.2
 
-    β = 6
+    β = 4
     #génération coûts
     distances = generation_matrice_distance(coord_terminaux,coord_clvl1)
     
@@ -52,6 +53,9 @@ function main()
     b = generation_matrice_b(distances_concentrators,couts_clvl1)
 
     s = generation_couts_ouverture_clvl(size(coord_clvl2,1))
+
+    show(scatter_search(c,b,s,distances,Q,a,P,tenure,k,β))
+    #=
     println("generation pop de taille $P w/ grasp")
     solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, λ, P)
 
@@ -120,7 +124,7 @@ function main()
     
     savefig(pop_refset,"out/path_relinking.png")
 
-
+=#
 end
 
 main()

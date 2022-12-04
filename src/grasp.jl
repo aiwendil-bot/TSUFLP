@@ -64,7 +64,7 @@ include("nearest_neighbors.jl")
 include("utilities.jl")
 
 function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b::Array{Float64,2},
-    c::Array{Float64,2}, s::Vector{Float64}, d::Array{Float64,2}, a::Float64, λ::Float64, P::Int64)::Vector{Vector{Vector{Int64}}}
+    c::Array{Float64,2}, s::Vector{Float64}, d::Array{Float64,2}, a::Float64, P::Int64)::Vector{Vector{Vector{Int64}}}
 
     #construit une array des terminaux triés par distance décroissante de chaque CLVL1
 

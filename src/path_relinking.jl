@@ -84,7 +84,11 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
                 end
             end
             
-            #inserer(skiplist,sol_transit)
+            if isFeasible(sol_transit,Q)
+                evals = evaluate_solution(3,sol_transit,d,c,b,s)
+                elem = Elem(Point(evals[1],evals[2]),Solution(sol_transit[1],sol_transit[2],sol_transit[3]))
+                SL_insert!(skiplist,elem,0.5)
+            end    
             push!(sols_intermediaires,sol_transit)
 
         end
