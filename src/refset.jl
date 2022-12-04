@@ -60,17 +60,20 @@ function update_refset!(solutions::Vector{Vector{Vector{Int64}}}, refset::Vector
 
         if isFeasible(candidate,Q)
 
-            index_dominees_obj1 = [k for k in eachindex(refset[1]) 
-                            if evaluate_solution(1,candidate,d,c,b,s) < evaluate_solution(1,refset[1][k],d,c,b,s) ]
-            
-            if !(isempty(index_dominees_obj1))
-                flag_improv = false
+            if !(candidate in refset[2])
 
-                index_remplacement = index_dominees_obj1[findmin([distance_solutions(refset[1][k],candidate) for k in index_dominees_obj1])[2]]
-                refset[1][index_remplacement] = candidate
+                index_dominees_obj1 = [k for k in eachindex(refset[1]) 
+                                if evaluate_solution(1,candidate,d,c,b,s) < evaluate_solution(1,refset[1][k],d,c,b,s) ]
+                
+                if !(isempty(index_dominees_obj1))
+                    flag_improv = false
+
+                    index_remplacement = index_dominees_obj1[findmin([distance_solutions(refset[1][k],candidate) for k in index_dominees_obj1])[2]]
+                    refset[1][index_remplacement] = candidate
+                end
             end
 
-            if flag_improv
+            if !(candidate in refset[1])
 
                 index_dominees_obj2 = [k for k in eachindex(refset[2]) 
                 if evaluate_solution(2,candidate,d,c,b,s) < evaluate_solution(2,refset[2][k],d,c,b,s) ]

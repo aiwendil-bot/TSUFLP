@@ -39,9 +39,9 @@ function main()
 
     tenure = 7
 
-    k = 0.2
+    k = 0.5
 
-    β = 4
+    β = 6
     #génération coûts
     distances = generation_matrice_distance(coord_terminaux,coord_clvl1)
     
@@ -54,10 +54,10 @@ function main()
 
     s = generation_couts_ouverture_clvl(size(coord_clvl2,1))
 
-    show(scatter_search(c,b,s,distances,Q,a,P,tenure,k,β))
+    @time scatter_search(c,b,s,distances,Q,a,P,tenure,k,β)
     #=
     println("generation pop de taille $P w/ grasp")
-    solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, λ, P)
+    solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, P)
 
     #graph_sol(coord_terminaux, coord_clvl1, coord_clvl2, solutions)
     
@@ -110,9 +110,11 @@ function main()
     ylims!(8,35)
     savefig(pop_refset,"out/swap/refSets.png")
 
+    skipl = creer_SL(3)
+
     for i in refSets[1]
         for j in refSets[2]
-            sols_intermediaires = @time path_relinking!(i,j,[],Q,c,b,distances,s)
+            sols_intermediaires = @time path_relinking!(i,j,skipl,Q,c,b,distances,s)
             #println(length(sols_intermediaires))
             #println(length([k for k in sols_intermediaires if isFeasible(k,Q)]))
 
@@ -124,7 +126,7 @@ function main()
     
     savefig(pop_refset,"out/path_relinking.png")
 
-=#
+    =#
 end
 
 main()

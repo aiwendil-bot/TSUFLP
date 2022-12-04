@@ -102,7 +102,7 @@ function scatter_search(c::Array{Float64,2},b::Array{Float64,2},s::Vector{Float6
         end    
 
         pareto = scatter([elem.point.x for elem in get_elems(new_skiplist)],[elem.point.y for elem in get_elems(new_skiplist)])
-        xlims!(150,210)
+        xlims!(150,280)
         ylims!(9,16)
         savefig(pareto,"out/pareto_$cpt_iteration.png")
 
@@ -113,8 +113,13 @@ function scatter_search(c::Array{Float64,2},b::Array{Float64,2},s::Vector{Float6
 
 
     end
+    new_skiplist = creer_SL(5)
 
-    return nondominated_solutions
+    for elem in get_elems(nondominated_solutions)
+        SL_insert!(new_skiplist,elem,0.5)
+    end 
+
+    return [elem.point for elem in get_elems(new_skiplist)]
 
 end
 

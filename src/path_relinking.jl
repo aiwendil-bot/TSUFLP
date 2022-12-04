@@ -71,6 +71,8 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
 
     end
 
+
+
     if length(conc1_in) > 0
 
         for i in eachindex(conc1_in)
@@ -115,6 +117,7 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
             
         end
     end
+
 
     # réconcilier les cclvl2
 
@@ -199,6 +202,7 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
 
         end
     end
+
     #=
     on change un à un chaque terminal
         pour chaque changement on vérifie que le conc d'arrivée n'est pas saturé
@@ -207,7 +211,7 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
     =#
     
     wrong_terminals = [k for k in eachindex(sol_transit[1]) if sol_transit[1][k] != solFin[1][k]]
-
+    
     while length(wrong_terminals) > 0
 
         i = rand(wrong_terminals)
@@ -218,15 +222,18 @@ function path_relinking!(solInit::Vector{Vector{Int64}},solFin::Vector{Vector{In
 
         #if length(findall(x -> x == solFin[1][i],solFin[1])) <= Q
             #inserer(skiplist, sol_transit)
-        push!(sols_intermediaires,sol_transit)
+        if length(wrong_terminals) % 10 == 0    
+            push!(sols_intermediaires,sol_transit)
+        end
 
-        if length(wrong_terminals) % 5 == 0 && isFeasible(sol_transit, Q)
+        if isFeasible(sol_transit, Q)
                 evals = evaluate_solution(3,sol_transit,d,c,b,s)
                 elem = Elem(Point(evals[1],evals[2]),Solution(sol_transit[1],sol_transit[2],sol_transit[3]))
                 SL_insert!(skiplist,elem,0.5)
         end
 
         #end
+        
         
         deleteat!(wrong_terminals, findfirst(x -> x == i, wrong_terminals))
     end

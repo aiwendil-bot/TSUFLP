@@ -438,7 +438,9 @@ for elem in elements
 	# insertion de chaque elements
 	inser_ok = SL_insert!(SL, elem, 0.5)
 end
-
+#=
 for elem in get_elems(SL)
 	println(elem.point.x, "  ", elem.point.y)
 end
+
+=#
