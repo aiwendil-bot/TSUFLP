@@ -2,47 +2,47 @@
 
 #Shift : Réassigne un terminal à un autre concentrateur (ouvert ou non)
 
-function shift(solInit::Vector{Vector{Int64}},Q::Int64, terminal::Int64,conc_depart::Int64,conc_arrivee::Int64,
-                b::Array{Float64,2},s::Vector{Float64})
+function shift(solInit::Solution,Q::Int64, terminal::Int64,conc_depart::Int64,conc_arrivee::Int64,
+                b::Array{Float64,2},s::Vector{Float64})::Solution
 
     
 
     #si le conc_arrivee est déjà saturé on ne fait rien
     sol = deepcopy(solInit)
-    if length(findall(x -> x == conc_arrivee,sol[1])) == Q
+    if length(findall(x -> x == conc_arrivee,sol.assign_term)) == Q
         return sol
     end    
 
     #si c était le dernier terminal affecté à ce conc_depart, on le ferme
     
-    if length(findall(x -> x == conc_depart,sol[1])) == 1
-        deleteat!(sol[3], findfirst(x->x==conc_depart,sol[3]))
+    if length(findall(x -> x == conc_depart,sol.assign_term)) == 1
+        deleteat!(sol.conclvl1_ouverts, findfirst(x->x==conc_depart,sol.conclvl1_ouverts))
 
         #si c était le dernier cclvl1 affecté à un cclvl2 on ferme celui-ci
 
-        cclvl2 = sol[2][conc_depart]
-        if length(findall(x -> x == cclvl2,sol[2])) == 1
-            deleteat!(sol[4], findfirst(x->x==cclvl2,sol[4]))
+        cclvl2 = sol.assign_conclvl1[conc_depart]
+        if length(findall(x -> x == cclvl2,sol.assign_conclvl1)) == 1
+            deleteat!(sol.conclvl2_ouverts, findfirst(x->x==cclvl2,sol.conclvl2_ouverts))
         end    
 
-        sol[2][conc_depart] = 0
+        sol.assign_conclvl1[conc_depart] = 0
     end
     
     #on affecte le nouveau conc au terminal
 
-    sol[1][terminal] = conc_arrivee
+    sol.assign_term[terminal] = conc_arrivee
 
     #si le conc_arrivee n'était pas ouvert on l'ouvre
 
-    if !(conc_arrivee in sol[3])
-        push!(sol[3],conc_arrivee)
+    if !(conc_arrivee in sol.conclvl1_ouverts)
+        push!(sol.conclvl1_ouverts,conc_arrivee)
         #et on l'affecte au clvl2 le moins cher
-        clvl2_moins_cher = argmin([b[conc_arrivee,k] + k in sol[4] ? 0 : s[k] for k in sol[4]])
-        sol[2][conc_arrivee] = clvl2_moins_cher
+        clvl2_moins_cher = argmin([b[conc_arrivee,k] + k in sol.conclvl2_ouverts ? 0 : s[k] for k in sol.conclvl2_ouverts])
+        sol.assign_conclvl1[conc_arrivee] = clvl2_moins_cher
             
         #et on ouvre si ce n'est pas déjà le cas ce clvl2
-        if !(clvl2_moins_cher in sol[4])
-            push!(sol[4],clvl2_moins_cher)
+        if !(clvl2_moins_cher in sol.conclvl2_ouverts)
+            push!(sol.conclvl2_ouverts,clvl2_moins_cher)
         end
     end
 
@@ -59,8 +59,8 @@ Swap: Interchange les terminaux assignés à 2 concentrateurs différents
 
 =#
 
-function swap(solInit::Vector{Vector{Int64}},conc_depart::Int64,
-    conc_arrivee::Int64,b::Array{Float64,2},s::Vector{Float64})
+function swap(solInit::Solution,conc_depart::Int64,
+    conc_arrivee::Int64,b::Array{Int64,2},s::Vector{Int64})::Solution
     
     sol = deepcopy(solInit)
 
@@ -68,65 +68,65 @@ function swap(solInit::Vector{Vector{Int64}},conc_depart::Int64,
 
 
     
-    if !(conc_depart in sol[3])
+    if !(conc_depart in sol.conclvl1_ouverts)
         conc_depart, conc_arrivee = conc_arrivee, conc_depart
     end    
 
     #si conc_arrivee est déjà ouvert on ne fait rien
 
-    if conc_arrivee in sol[3] || ( !(conc_depart in sol[3]) && !(conc_arrivee in sol[3]))
+    if conc_arrivee in sol.conclvl1_ouverts || ( !(conc_depart in sol.conclvl1_ouverts) && !(conc_arrivee in sol.conclvl1_ouverts))
         return sol
     end
 
     #on ferme conc_depart
 
 
-    deleteat!(sol[3], findfirst(x->x==conc_depart,sol[3]))
+    deleteat!(sol.conclvl1_ouverts, findfirst(x->x==conc_depart,sol.conclvl1_ouverts))
 
-    cclvl2 = sol[2][conc_depart]
+    cclvl2 = sol.assign_conclvl1[conc_depart]
 
-    if length(findall(x -> x == cclvl2,sol[2])) == 1
-        deleteat!(sol[4], findfirst(x->x==cclvl2,sol[4]))
+    if length(findall(x -> x == cclvl2,sol.assign_conclvl1)) == 1
+        deleteat!(sol.conclvl2_ouverts, findfirst(x->x==cclvl2,sol.conclvl2_ouverts))
     end    
 
-    sol[2][conc_depart] = 0
+    sol.assign_conclvl1[conc_depart] = 0
 
     #on reaffecte les terminaux
 
-    for i in 1:length(sol[1])
-        if sol[1][i] == conc_depart
-            sol[1][i] = conc_arrivee
+    for i in 1:length(sol.assign_term)
+        if sol.assign_term[i] == conc_depart
+            sol.assign_term[i] = conc_arrivee
         end
     end
     
     # on ouvre conc_arrivee
 
-    push!(sol[3],conc_arrivee)
+    push!(sol.conclvl1_ouverts,conc_arrivee)
 
     #et on l'affecte au clvl2 le moins cher
-    clvl2_moins_cher = argmin([b[conc_arrivee,k] + k in sol[4] ? 0 : s[k] for k in sol[4]])
-    sol[2][conc_arrivee] = clvl2_moins_cher
+    clvl2_moins_cher = argmin([b[conc_arrivee,k] + k in sol.conclvl2_ouverts ? 0 : s[k] for k in eachindex(s)])
+    sol.assign_conclvl1[conc_arrivee] = clvl2_moins_cher
                 
     #et on ouvre si ce n'est pas déjà le cas ce clvl2
-    if !(clvl2_moins_cher in sol[4])
-        push!(sol[4],clvl2_moins_cher)
+    if !(clvl2_moins_cher in sol.conclvl2_ouverts)
+        push!(sol.conclvl2_ouverts,clvl2_moins_cher)
     end
 
     return sol
 
 end
 
-function swap2(solInit::Vector{Vector{Int64}},conc_in::Int64,conc_out::Int64)::Vector{Vector{Int64}}
+function swap2(solInit::Solution,conc_in::Int64,conc_out::Int64)::Solution
 
     sol = deepcopy(solInit)
-    if !(conc_in in sol[4])
-    push!(sol[4],conc_in)
+    if !(conc_in in sol.conclvl2_ouverts)
+    push!(sol.conclvl2_ouverts,conc_in)
     end
-    deleteat!(sol[4], findfirst(x -> x==conc_out,sol[4]))
+    deleteat!(sol.conclvl2_ouverts, findfirst(x -> x==conc_out,sol.conclvl2_ouverts))
 
-    for k in eachindex(sol[2])
-        if sol[2][k] == conc_out
-            sol[2][k] = conc_in
+    for k in eachindex(sol.assign_conclvl1)
+        if sol.assign_conclvl1[k] == conc_out
+            sol.assign_conclvl1[k] = conc_in
         end
     end
     

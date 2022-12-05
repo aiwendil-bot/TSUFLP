@@ -19,15 +19,16 @@ critère d'aspiration : < best solution
 
 =#
 
-function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::Float64,
-                c::Array{Float64,2},b::Array{Float64,2},s::Vector{Float64},
-                d::Array{Float64,2})
+function tabu(obj::Int64, sol::Solution,Q::Int64,tenure::Int64,k::Float64,
+                c::Array{Int64,2},b::Array{Int64,2},s::Vector{Int64},
+                d::Array{Int64,2})::Solution
+
     cpt_pas_amelioration::Int64 = 0
     nb_iterations = 1
     best_solution = deepcopy(sol)
     best_candidate = deepcopy(sol)
-    tabu_list = []
-    while cpt_pas_amelioration < k*length(sol[2])
+    tabu_list = Vector{Int64}[]
+    while cpt_pas_amelioration < k*length(sol.assign_conclvl1)
 
         found_amelio = false
 
@@ -40,11 +41,11 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
         j = 1
 
         
-        while !found_amelio && i < length(best_candidate[3])
+        while !found_amelio && i < length(best_candidate.conclvl1_ouverts)
             
-            while !found_amelio && j < length(setdiff(1:length(sol[2]),sol[3]))
+            while !found_amelio && j < length(setdiff(1:length(sol.assign_conclvl1),sol.conclvl1_ouverts))
 
-                neighbor = swap(best_candidate,best_candidate[3][i],setdiff(1:length(best_candidate[2]),best_candidate[3])[j],b,s)
+                neighbor = swap(best_candidate,best_candidate.conclvl1_ouverts[i],setdiff(1:length(best_candidate.assign_conclvl1),best_candidate.conclvl1_ouverts)[j],b,s)
 
             
                 if !([i,j] in tabu_list)
@@ -74,7 +75,7 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
 
         #=
 
-        conc_possibles = [j for j in eachindex(sol[2]) if length(findall(x -> x == j,sol[1])) != Q ]
+        conc_possibles = [j for j in eachindex(sol.assign_conclvl1) if length(findall(x -> x == j,sol.assign_term)) != Q ]
 
         i = 1
         j = conc_possibles[1]
@@ -140,9 +141,9 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
 
             end
             if length(tabu_list) < tenure
-                push!(tabu_list,[best_candidate[3][i],setdiff(1:length(best_candidate[2]),best_candidate[3])[j]])
+                push!(tabu_list,[best_candidate.conclvl1_ouverts[i],setdiff(1:length(best_candidate.assign_conclvl1),best_candidate.conclvl1_ouverts)[j]])
             else    
-                tabu_list[(nb_iterations+1)%tenure + 1] = [best_candidate[3][i],setdiff(1:length(best_candidate[2]),best_candidate[3])[j]]
+                tabu_list[(nb_iterations+1)%tenure + 1] = [best_candidate.conclvl1_ouverts[i],setdiff(1:length(best_candidate.assign_conclvl1),best_candidate.conclvl1_ouverts)[j]]
         
             end
         end    
@@ -156,17 +157,17 @@ function tabu(obj::Int64, sol::Vector{Vector{Int64}},Q::Int64,tenure::Int64,k::F
 
     return best_solution
 end
-
+#=
 function getNeighbors_shift(sol::Vector{Vector{Int64}},Q::Int64,
                             b::Array{Float64,2},s::Vector{Float64})::Vector{Vector{Vector{Int64}}}
     
-    conc_possibles = [j for j in eachindex(sol[2]) if length(findall(x -> x == j,sol[1])) != Q ]
+    conc_possibles = [j for j in eachindex(sol.assign_conclvl1) if length(findall(x -> x == j,sol.assign_term)) != Q ]
 
-    neighbors = Array{Vector{Vector{Int64}},2}(undef,(length(sol[1]),length(conc_possibles)))
+    neighbors = Array{Vector{Vector{Int64}},2}(undef,(length(sol.assign_term),length(conc_possibles)))
 
-    for i in 1:length(sol[1])
+    for i in 1:length(sol.assign_term)
         for j in eachindex(conc_possibles)
-            neighbors[i,j] = shift(sol,Q,i,sol[1][i],conc_possibles[j],b,s)
+            neighbors[i,j] = shift(sol,Q,i,sol.assign_term[i],conc_possibles[j],b,s)
         end
     end
     
@@ -178,11 +179,11 @@ end
 function getNeighbors_swap(sol::Vector{Vector{Int64}},
     b::Array{Float64,2},s::Vector{Float64})::Vector{Vector{Vector{Int64}}}
 
-    neighbors = Array{Vector{Vector{Int64}},2}(undef,(length(sol[3]),length(setdiff(1:length(sol[2]),sol[3]))))
+    neighbors = Array{Vector{Vector{Int64}},2}(undef,(length(sol.conclvl1_ouverts),length(setdiff(1:length(sol.assign_conclvl1),sol.conclvl1_ouverts))))
 
-    for i in 1:length(sol[3])
-            for j in 1:length(setdiff(1:length(sol[2]),sol[3]))
-                neighbors[i,j] = swap(sol,sol[3][i],j,b,s)
+    for i in 1:length(sol.conclvl1_ouverts)
+            for j in 1:length(setdiff(1:length(sol.assign_conclvl1),sol.conclvl1_ouverts))
+                neighbors[i,j] = swap(sol,sol.conclvl1_ouverts[i],j,b,s)
             end
             
     end
@@ -190,8 +191,7 @@ function getNeighbors_swap(sol::Vector{Vector{Int64}},
     return vec(neighbors)
 
 end    
-
-
+=#
         
 
 

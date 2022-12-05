@@ -18,7 +18,7 @@ include("nearest_neighbors.jl")
 # coût d'assignation des Q plus proches terminaux
 # coût d'ouverture du clvl1 et de son assignation (au mieux) s'il n'est pas déjà ouvert dans la solution
 
-function g1(candidat::Int64, c::Array{Float64,2}, b::Array{Float64,2}, s::Vector{Float64},
+function g1(candidat::Int64, c::Array{Int64,2}, b::Array{Int64,2}, s::Vector{Int64},
     terminaux_tries_couts::Array{Int64,2}, free_terminals::Vector{Int64}, Q::Int64,
     clvl2_ouverts::Vector{Int64})::Float64
 
@@ -44,7 +44,7 @@ end
 # distance max entre les dépôts ouverts et les terminaux
 # coût d'ouverture du clvl1 et de son assignation (au mieux) s'il n'est pas déjà ouvert dans la solution
 
-function g2(candidat::Int64, d::Matrix{Float64}, free_terminals::Vector{Int64}, preferences::Array{Int64,2})::Float64
+function g2(candidat::Int64, d::Matrix{Int64}, free_terminals::Vector{Int64}, preferences::Array{Int64,2})::Float64
 
     for i in 1:size(d,1)
         if preferences[i,candidat] in free_terminals
@@ -57,8 +57,8 @@ end
 #calcul le coût d'affectation du terminal candid au clvl1 conc au regard des objectifs
 # avec un jeu de poids λ
 
-function cout_affectation_term(candid::Int64,conc::Int64,λ::Float64,c::Array{Float64,2},
-    d::Matrix{Float64},clvl1_pris::Vector{Int64}, terminaux_pris::Vector{Int64})::Float64
+function cout_affectation_term(candid::Int64,conc::Int64,λ::Float64,c::Array{Int64,2},
+    d::Matrix{Int64},clvl1_pris::Vector{Int64}, terminaux_pris::Vector{Int64})::Float64
 
     current_distance = d[candid][conc]
     max_distance = length(terminaux_pris) == 0 ? current_distance : maximum([d[i][j] for i in clvl1_pris for j in terminaux_pris])
@@ -79,15 +79,15 @@ end
 
 #affecte les Q "meilleurs" terminaux au candidat selon la matrice de cout "matrice"
 
-function affect_rapide!(candidat::Int64,matrice::Array{Int64,2},free_terminals::Vector{Int64},Q::Int64,sol::Vector{Vector{Int64}})
+function affect_rapide!(candidat::Int64,matrice::Array{Int64,2},free_terminals::Vector{Int64},Q::Int64,sol::Solution)
 
         #compteurs pour contrôler l'affectation des terminaux
         cpt_affectation::Int64 = 0
         k = 1
         #on lui affecte les Q terminaux les plus éloignés
-        while cpt_affectation < Q && k <= length(sol[1])
+        while cpt_affectation < Q && k <= length(sol.assign_term)
             if matrice[k,candidat] in free_terminals
-                sol[1][matrice[k,candidat]] = candidat
+                sol.assign_term[matrice[k,candidat]] = candidat
                 cpt_affectation += 1
             end
             k += 1
@@ -106,28 +106,28 @@ solution : vecteur composé de :
 =#
 
 
-function evaluate_solution(obj::Int64,sol::Vector{Vector{Int64}}, d::Array{Float64,2}, 
-                            c::Array{Float64}, b::Array{Float64},s::Vector{Float64})
+function evaluate_solution(obj::Int64,sol::Solution, d::Array{Int64,2}, 
+                            c::Array{Int64,2}, b::Array{Int64,2},s::Vector{Int64})
 
     if obj == 1
 
-    return sum([c[i,sol[1][i]] for i in 1:length(sol[1])]) + 
-         sum([b[j,sol[2][j]] for j in 1:length(sol[2]) if sol[2][j] != 0])+
-         sum([s[k] for k in sol[4]])
+    return sum([c[i,sol.assign_term[i]] for i in eachindex(sol.assign_term)]) + 
+         sum([b[j,sol.assign_conclvl1[j]] for j in eachindex(sol.assign_conclvl1) if sol.assign_conclvl1[j] != 0])+
+         sum([s[k] for k in sol.conclvl2_ouverts])
     end
 
     if obj == 2
 
-    return maximum([d[i,sol[1][i]] for i in 1:length(sol[1])])
+    return maximum([d[i,sol.assign_term[i]] for i in 1:length(sol.assign_term)])
     end
     if obj == 3
         
-        return [sum([c[i,sol[1][i]] for i in 1:length(sol[1])]) + 
-         sum([b[j,sol[2][j]] for j in 1:length(sol[2]) if sol[2][j] != 0])+
-         sum([s[k] for k in sol[4]]), maximum([d[i,sol[1][i]] for i in 1:length(sol[1])])]
+        return [sum([c[i,sol.assign_term[i]] for i in 1:length(sol.assign_term)]) + 
+         sum([b[j,sol.assign_conclvl1[j]] for j in 1:length(sol.assign_conclvl1) if sol.assign_conclvl1[j] != 0])+
+         sum([s[k] for k in sol.conclvl2_ouverts]), maximum([d[i,sol.assign_term[i]] for i in 1:length(sol.assign_term)])]
     end
 end
-
+#=
 function gain_shift(obj::Int64, solInit::Vector{Vector{Int64}},solModif::Vector{Vector{Int64}},
                     terminal::Int64,c::Array{Float64,2},b::Array{Float64,2},s::Vector{Float64},
                     d::Array{Float64,2})
@@ -185,8 +185,8 @@ function gain_swap(obj::Int64, solInit::Vector{Vector{Int64}},solModif::Vector{V
         println(clvl2_depart)
         println(clvl2_arrivee)
         =#
-        gain += sum([c[i,clvl1_arrivee] for i in 1:length(solInit[1]) if solModif[1][i] == clvl1_arrivee])
-                - sum([c[i,clvl1_depart] for i in 1:length(solInit[1]) if solInit[1][i] == clvl1_depart])
+        gain += sum([c[i,clvl1_arrivee] for i in eachindex(solInit.assign_term) if solModif.assign_term[i] == clvl1_arrivee])
+                - sum([c[i,clvl1_depart] for i in eachindex(solInit.assign_term) if solInit.assign_term[i] == clvl1_depart])
 
                 if clvl2_depart == 0
                     gain += b[clvl1_arrivee,clvl2_arrivee] + s[clvl2_arrivee]
@@ -199,19 +199,19 @@ function gain_swap(obj::Int64, solInit::Vector{Vector{Int64}},solModif::Vector{V
     else
 
 
-        gain += maximum([d[i,clvl1_arrivee] for i in 1:length(solModif[1]) if solModif[1][i] == clvl1_arrivee ]) - 
-                maximum([d[i,clvl1_depart] for i in 1:length(solInit[1]) if solInit[1][i] == clvl1_depart])
+        gain += maximum([d[i,clvl1_arrivee] for i in eachindex(solModif.assign_term) if solModif.assign_term[i] == clvl1_arrivee ]) - 
+                maximum([d[i,clvl1_depart] for i in eachindex(solInit.assign_term) if solInit.assign_term[i] == clvl1_depart])
         
     end    
 
     return gain
 
 end    
+=#
 
+function distance_solutions(sol1::Solution,sol2::Solution)::Int64
 
-function distance_solutions(sol1::Vector{Vector{Int64}},sol2::Vector{Vector{Int64}})::Int64
-
-    return length(setdiff(sol1[3],sol2[3])) + length(setdiff(sol2[3],sol1[3])) +
-           length(setdiff(sol1[4],sol2[4])) + length(setdiff(sol2[4],sol1[4]))
+    return length(setdiff(sol1.conclvl1_ouverts,sol2.conclvl1_ouverts)) + length(setdiff(sol2.conclvl1_ouverts,sol1.conclvl1_ouverts)) +
+           length(setdiff(sol1.conclvl2_ouverts,sol2.conclvl2_ouverts)) + length(setdiff(sol2.conclvl2_ouverts,sol1.conclvl2_ouverts))
 
 end

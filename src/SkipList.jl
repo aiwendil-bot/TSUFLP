@@ -1,9 +1,4 @@
 #----- Définition des structures -------
-struct Solution
-    f_lvl_concentrators::Vector{Int64}
-    s_lvl_concentrators::Vector{Int64}
-    locations::Vector{Int64}
-end
 
 mutable struct Point
     x::Float64
@@ -389,8 +384,8 @@ end
 # - "-v" affichage de la SL à la fin des insertions seulement
 # - "-v" max
 =#
-const verbose = Ref(false)
-const verbose0 = Ref(false)
+verbose = Ref(false)
+verbose0 = Ref(false)
 #main(ARGS)
 
 SL = creer_SL(10)
@@ -431,14 +426,14 @@ Point(246.6607771607848,10.089251458212509),
 Point(253.37896986883388,10.089251458212509),
 Point(260.0990722708327,10.089251458212509)
 ]
-
+#=
 elements = [Elem(points[i], Solution([],[],[])) for i in 1:length(points)]
 
 for elem in elements
 	# insertion de chaque elements
 	inser_ok = SL_insert!(SL, elem, 0.5)
 end
-#=
+
 for elem in get_elems(SL)
 	println(elem.point.x, "  ", elem.point.y)
 end

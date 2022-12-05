@@ -13,7 +13,7 @@
 julia>
 ```
 """
-function isFeasible(solution::Vector{Vector{Int64}}, Q::Int64)::Bool
+function isFeasible(solution::Solution, Q::Int64)::Bool
 
     #=
     vérifier :
@@ -22,10 +22,11 @@ function isFeasible(solution::Vector{Vector{Int64}}, Q::Int64)::Bool
         - chaque CLVL1 est relié à un CLVL2
     =#
 
-    compteur = zeros(Int64,length(solution[2]))
+    compteur = zeros(Int64,length(solution.assign_conclvl1))
 
-    for k in solution[1]
-        if !(k in solution[3])
+    for k in solution.assign_term
+        if !(k in solution.conclvl1_ouverts)
+
             return false
         end
         compteur[k] +=1
@@ -33,12 +34,16 @@ function isFeasible(solution::Vector{Vector{Int64}}, Q::Int64)::Bool
     
     for k in compteur
         if k > Q
+
+
             return false
         end
     end
     
-    for k in solution[3]
-        if !(solution[2][k] in solution[4])
+    for k in solution.conclvl1_ouverts
+        if !(solution.assign_conclvl1[k] in solution.conclvl2_ouverts)
+
+
             return false
 
         end

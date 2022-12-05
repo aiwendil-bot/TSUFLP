@@ -6,6 +6,8 @@ main:
 =#
 using Random, Profile, Plots, LaTeXStrings
 Random.seed!(1235)
+include("Solution.jl")
+include("SkipList.jl")
 
 include("generation_couts.jl")
 include("recup_data.jl")
@@ -15,33 +17,30 @@ include("refset.jl")
 include("plot_test.jl")
 include("path_relinking.jl")
 include("isFeasible.jl")
-#include("SkipList.jl")
 include("scatter_search.jl")
-
+include("../tests/parsing_instance.jl")
+include("generation_couts_sanchez.jl")
+include("resoudre_instance_sanchez.jl")
+include("plot_sols.jl")
 function main()
 
+    #=
     terminaux = readdlm("data/terminaux.txt")
     coord_terminaux = terminaux[rand(1:size(terminaux,1),200),:]
     coord_clvl1 = readdlm("data/clvl1.txt")
     coord_clvl2 = readdlm("data/clvl2.txt")
 
-    I = [i for i in 1:size(coord_terminaux,1)]
-    J = [i for i in 1:size(coord_clvl1,1)]
-    K = [i for i in 1:size(coord_clvl2,1)]
-
     Q::Int64 = 7
 
     a::Float64 = 0.4
 
-    λ::Float64 = 0.5
-
-    P = 150
+    P = 200
 
     tenure = 7
 
     k = 0.5
 
-    β = 6
+    β = 8
     #génération coûts
     distances = generation_matrice_distance(coord_terminaux,coord_clvl1)
     
@@ -54,7 +53,24 @@ function main()
 
     s = generation_couts_ouverture_clvl(size(coord_clvl2,1))
 
+    
+
     @time scatter_search(c,b,s,distances,Q,a,P,tenure,k,β)
+    =#
+
+    Q::Int64 = 7
+
+    a::Float64 = 0.4
+
+    P = 150
+
+    tenure = 7
+
+    k = 0.5
+
+    β = 8
+
+    resoudre_instance_sanchez("data/files/large1.txt", Q,a,P,tenure,k,β)
     #=
     println("generation pop de taille $P w/ grasp")
     solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, P)

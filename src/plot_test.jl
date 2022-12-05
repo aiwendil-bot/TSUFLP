@@ -36,7 +36,7 @@ function graph_sol(coord_t, coord_clvl1, coord_clvl2, sol)
 	#connect_points(pt1,pt2)
 	#display(a)
 	#println("press")
-	clvl1_aff_term = sol[1][1]
+	clvl1_aff_term = sol.assign_term[1]
 	i = 1
 	#println("clv1 aff term")
 	#println(clvl1_aff_term)
@@ -56,7 +56,7 @@ function graph_sol(coord_t, coord_clvl1, coord_clvl2, sol)
 	println("Affectation clvl1 - terminaux (press any key)")
 	readline()
 
-	clvl2_aff_clvl1 = sol[1][2]
+	clvl2_aff_clvl1 = sol.assign_term[2]
 	println(clvl2_aff_clvl1)
 	readline()
 	i = 1

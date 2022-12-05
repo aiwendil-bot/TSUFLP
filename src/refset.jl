@@ -1,10 +1,12 @@
 
 
-function create_refset(solutions::Vector{Vector{Vector{Int64}}},β::Int64,
-                            b::Array{Float64,2},c::Array{Float64,2}, s::Vector{Float64}, 
-                            d::Array{Float64,2})::Vector{Vector{Vector{Vector{Int64}}}}
+function create_refset(solutions::Vector{Solution},β::Int64,
+                            b::Array{Int64,2},c::Array{Int64,2}, s::Vector{Int64}, 
+                            d::Array{Int64,2}, Q::Int64 )::Vector{Vector{Solution}}
 
-    refSet2 = Vector{Vector{Int64}}[]
+    solutions = filter(x -> isFeasible(x,Q), solutions)
+
+    refSet2 = Solution[]
 
     meilleures_z1 = sort(solutions,by = sol -> evaluate_solution(1,sol,d,c,b,s))
     meilleures_z2 = sort(solutions,by = sol -> evaluate_solution(2,sol,d,c,b,s))
@@ -49,9 +51,9 @@ function create_refset(solutions::Vector{Vector{Vector{Int64}}},β::Int64,
 end
 
 
-function update_refset!(solutions::Vector{Vector{Vector{Int64}}}, refset::Vector{Vector{Vector{Vector{Int64}}}},
-    β::Int64, b::Array{Float64,2},c::Array{Float64,2}, s::Vector{Float64}, 
-    d::Array{Float64,2},Q::Int64)::Bool
+function update_refset!(solutions::Vector{Solution}, refset::Vector{Vector{Solution}},
+     b::Array{Int64,2},c::Array{Int64,2}, s::Vector{Int64}, 
+    d::Array{Int64,2},Q::Int64)::Bool
 
 
     flag_improv = true

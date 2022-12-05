@@ -44,4 +44,3 @@ open(filename) do f
 end
 
 end
-construction_instance("/home/adrien/IdeaProjects/TSUFLP/tests/instances/files/large1.txt")
