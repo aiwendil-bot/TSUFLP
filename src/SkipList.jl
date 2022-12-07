@@ -209,11 +209,11 @@ function SL_insert_up!(SL, new_elem, proba)
 	#piece = 1
 	while (piece) && (SL.curseur.etage + 1 <= SL.hauteur_max)
 		etage = SL.curseur.etage + 1
-		if verbose[] println("Face! on ajoute le point ", new_elem.point, " a l'étage superieur (", SL.curseur.etage + 1, ")") end
+		#if verbose[] println("Face! on ajoute le point ", new_elem.point, " a l'étage superieur (", SL.curseur.etage + 1, ")") end
 		# Si l'étage n'existe on le créer
 		if (SL.curseur.etage + 1 > SL.hauteur)
 			if (SL.hauteur + 1 <= SL.hauteur_max)
-				if verbose[] println("L'étage n'existe pas on le créer") end
+				#if verbose[] println("L'étage n'existe pas on le créer") end
 				SL_new_floor!(SL)
 				prev = SL.entree
 				suiv = SL.entree.last
@@ -227,22 +227,22 @@ function SL_insert_up!(SL, new_elem, proba)
 				prev = SL.curseur
 				suiv = prev.next
 				
-				if verbose[] println("Le point ", new_elem.point, " est > a ", prev.elem, " (etage ", prev.etage, ") et < a ", suiv.elem, " (etage ", suiv.etage," )") end
+				#if verbose[] println("Le point ", new_elem.point, " est > a ", prev.elem, " (etage ", prev.etage, ") et < a ", suiv.elem, " (etage ", suiv.etage," )") end
 				etage = prev.etage
 				# on recupere le curseur qui pointait sur le nouvel element
 				SL.curseur = curs_elem
 			else
-				if verbose[] println("err: point non trouve pour l'insert_up") end
+				#if verbose[] println("err: point non trouve pour l'insert_up") end
 				return 0
 			end
 		end
 		
-		if verbose[] println("On insere le point ", new_elem.point, " au dessus de ", SL.curseur.elem, " (etage ", SL.curseur.etage, ")", " a l'etage ", etage, " apres ", prev.elem, " (etage ", prev.etage, ") et avant ", suiv.elem, " (etage ", suiv.etage, ")") end
+		#if verbose[] println("On insere le point ", new_elem.point, " au dessus de ", SL.curseur.elem, " (etage ", SL.curseur.etage, ")", " a l'etage ", etage, " apres ", prev.elem, " (etage ", prev.etage, ") et avant ", suiv.elem, " (etage ", suiv.etage, ")") end
 		SL.curseur.up = Node(Elem(new_elem.point), etage, prev, suiv, Node(), SL.curseur)
 		prev.next = SL.curseur.up
 		suiv.prev = SL.curseur.up
 		
-		if verbose[] println("après creation du point a l'étage superieur:") ; afficher_SL(SL) end
+		#if verbose[] println("après creation du point a l'étage superieur:") ; afficher_SL(SL) end
 		
 		SL.curseur = SL.curseur.up
 		piece = coin(proba)
@@ -295,6 +295,11 @@ function SL_insert!(SL, new_elem, proba)
 		while domine(new_elem.point, curs2.elem.point)
 			curs2 = curs2.next
 		end
+
+		#println("Le point ", new_elem.point, " domine tous les points entre ", curs1.elem.point, " a ", curs2.elem.point)
+		# On retire tous les éléments dominés par new_elem
+		SL_remove!(SL, curs1, curs2)
+		#readline()
 		#=
 		if verbose[] println("Le point ", new_elem.point, " domine tous les points entre ", curs1.elem.point, " a ", curs2.elem.point) end
 		SL_remove!(SL, curs1, curs2)
@@ -312,7 +317,8 @@ function SL_insert!(SL, new_elem, proba)
 		SL.curseur = SL.curseur.next
 		
 		#if verbose[] println("Apres insertion du point et avant insert up") ; afficher_SL(SL) end
-		#ins_status = SL_insert_up!(SL, new_elem, proba)
+		# On ajoute new_elem dans les étages supérieur à chaque fois que la pièce "tombe sur face"
+		ins_status = SL_insert_up!(SL, new_elem, proba)
 		
 		ret = true
 	else

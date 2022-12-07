@@ -1,3 +1,4 @@
+Random.seed!(1235)
 
 
 function distance_euclidienne(coord1::Vector{Float64},coord2::Vector{Float64})::Int64

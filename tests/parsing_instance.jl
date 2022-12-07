@@ -34,12 +34,13 @@ open(filename) do f
     m = Int(line1[1])
     n = Int(line1[2])
 
-    concentrateurs = map(elem -> convert(split(elem," ")),lines[2:n+1])
-    clvl1 = concentrateurs[1:Int(floor(n/5))]
-    clvl2 = concentrateurs[Int(floor(n/5)+1):length(concentrateurs)]
-    terminaux = map(elem -> convert(split(elem," ")),lines[n+2:length(lines)])
+    concentrateurs = map(elem -> convert(split(elem," ")),lines[2:m+1])
+    clvl1 = concentrateurs[1:Int(floor(4*m/5))]
+    clvl2 = concentrateurs[Int(floor(4*m/5)+1):m]
+    terminaux = map(elem -> convert(split(elem," ")),lines[m+2:length(lines)])
 
     return [terminaux,clvl1,clvl2]
+
 
 end
 

@@ -22,55 +22,41 @@ include("../tests/parsing_instance.jl")
 include("generation_couts_sanchez.jl")
 include("resoudre_instance_sanchez.jl")
 include("plot_sols.jl")
+include("crossover.jl")
+include("../tests/vopt_model.jl")
 function main()
 
-    #=
-    terminaux = readdlm("data/terminaux.txt")
-    coord_terminaux = terminaux[rand(1:size(terminaux,1),200),:]
-    coord_clvl1 = readdlm("data/clvl1.txt")
-    coord_clvl2 = readdlm("data/clvl2.txt")
+
 
     Q::Int64 = 7
 
     a::Float64 = 0.4
 
-    P = 200
-
-    tenure = 7
+    P = 300
 
     k = 0.5
 
     β = 8
-    #génération coûts
-    distances = generation_matrice_distance(coord_terminaux,coord_clvl1)
+    #vopt_resolve("data/files/small2.txt")
+    #resoudre_instance_sanchez("data/files/small2.txt", Q,a,P,k,β,true)
+    #resoudre_instance_sanchez("data/files/small2.txt", Q,a,P,k,β,false)
+
+    #comparaison_scatter_vOpt("small2")
+     
+    for file in readdir("tests/instances_test/", join=true)
+        for k in [0.1,0.5,0.9]
+        nameinstance = String(split(Vector(split(file, '/'))[end],'.')[1])               
     
-    distances_concentrators = generation_matrice_distance(coord_clvl1,coord_clvl2)
+        #vopt_resolve(file)
+        resoudre_instance_sanchez(file, Q,a,P,k,β,false,false)
+        resoudre_instance_sanchez(file, Q,a,P,k,β,true,false)
+        resoudre_instance_sanchez(file, Q,a,P,k,β,true,true)
+        comparaison_scatter_vOpt(nameinstance,k)
 
-    couts_clvl1 = generation_couts_ouverture_clvl(size(coord_clvl1,1))
-
-    c = 1 ./ distances
-    b = generation_matrice_b(distances_concentrators,couts_clvl1)
-
-    s = generation_couts_ouverture_clvl(size(coord_clvl2,1))
-
+        end
     
-
-    @time scatter_search(c,b,s,distances,Q,a,P,tenure,k,β)
-    =#
-
-    Q::Int64 = 7
-
-    a::Float64 = 0.4
-
-    P = 150
-
-    tenure = 7
-
-    k = 0.5
-
-    β = 8
-
-    resoudre_instance_sanchez("data/files/large1.txt", Q,a,P,tenure,k,β)
+    end    
+    
     #=
     println("generation pop de taille $P w/ grasp")
     solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, P)

@@ -33,8 +33,11 @@ function g1(candidat::Int64, c::Array{Int64,2}, b::Array{Int64,2}, s::Vector{Int
             cpt +=1
         end
         k += 1
-    end        
+    end  
+    
+    if length(free_terminals) == 1
 
+    end
     return 1 / (cout_affectation
                + minimum(b[candidat, :]) + (argmin(s[argmin(b[candidat, :])]) in clvl2_ouverts ? 0 : minimum(s[argmin(b[candidat, :])])))
 
@@ -48,7 +51,7 @@ function g2(candidat::Int64, d::Matrix{Int64}, free_terminals::Vector{Int64}, pr
 
     for i in 1:size(d,1)
         if preferences[i,candidat] in free_terminals
-            return 1/d[preferences[i,candidat],candidat]
+            return d[preferences[i,candidat],candidat] == 0 ? 1/0.000001 : 1/d[preferences[i,candidat],candidat]
         end    
 
     end    

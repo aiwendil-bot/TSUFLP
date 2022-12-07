@@ -66,8 +66,7 @@ function swap(solInit::Solution,conc_depart::Int64,
 
     #si le conc départ n'est pas ouvert on inverse les concentrateurs
 
-
-    
+   
     if !(conc_depart in sol.conclvl1_ouverts)
         conc_depart, conc_arrivee = conc_arrivee, conc_depart
     end    
