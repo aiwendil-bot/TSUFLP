@@ -267,5 +267,5 @@ println("---------------")
 
 for k in [0.1,0.5,0.9]
     println("---------------")
-    moyenne_distance_vopt(0.5)
+    moyenne_distance_vopt(k)
 end
