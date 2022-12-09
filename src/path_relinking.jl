@@ -220,7 +220,7 @@ function path_relinking!(solInit::Solution,solFin::Solution,skiplist::SkipList,Q
 
         #if length(findall(x -> x == solFin[1][i],solFin[1])) <= Q
             #inserer(skiplist, sol_transit)
-        if length(wrong_terminals) % 20 == 0    
+        if length(wrong_terminals) % Int(floor(length(sol_transit.assign_term)/2)) == 0    
             push!(sols_intermediaires,sol_transit)
         end
 

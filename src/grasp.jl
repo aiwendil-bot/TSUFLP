@@ -69,6 +69,7 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
     #construit une array des terminaux triés par distance décroissante de chaque CLVL1
 
     terminaux_tries_distance = Array{Int64,2}(undef,(length(I),length(J)))
+    println(size(terminaux_tries_distance))
     for j in 1:length(J)
         terminaux_tries_distance[:,j] = sort(I,by= term -> d[term,j],rev=true)
     end
@@ -283,13 +284,19 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
             evals = [λ* g1(k,c,b,s,terminaux_tries_couts,free_terminals,Q,sol.conclvl2_ouverts)+
             (1-λ)*g2(k,d,free_terminals,terminaux_tries_distance) for k in CL_CLVL1]
 
+
             gmin = minimum(evals)
             gmax = maximum(evals)
 
             # filtre en fonction du threshold
             RL_index = filter(i->evals[i] > (gmax - a*(gmax-gmin)),[i for i in 1:length(evals)])
             RL = [CL_CLVL1[i] for i in RL_index]
+            if gmax == gmin
+                chosen_one = rand(CL_CLVL1)
+            else
+
             chosen_one = rand(RL)
+            end
 
             #on ouvre le CLVL1 choisi
             push!(sol.conclvl1_ouverts,chosen_one)
@@ -350,7 +357,7 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
     end
 
     for k in Int(4*P/5)+1:P
-        solutions[k] = genSol2(I, J, K, Q, b, s, d, a)
+        solutions[k] = genSol_compromis(I,J,K,Q,b,c,s,d,a, 0.0)
     end
     
     return solutions

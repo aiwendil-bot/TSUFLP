@@ -1,7 +1,7 @@
 function scatter_search(instance_name::String, c::Array{Int64, 2}, b::Array{Int64, 2}, s::Vector{Int64}, d::Array{Int64, 2},
 	Q::Int64, a::Float64, P::Int64, k::Float64, β::Int64, crossover_on::Bool, tabu_cross_on::Bool)
 
-	tenure = Int(floor(0.1 * size(c, 2)))
+	tenure = 7
 
 	println("scatter search sur l'instance $instance_name")
 
@@ -75,9 +75,10 @@ function scatter_search(instance_name::String, c::Array{Int64, 2}, b::Array{Int6
 			push!(paires_interdites, [paire[1], paire[2]])
 			println("path relinking et intensification sur la paire $n_paire / $(length(paires_iteration))...")
 			sols_intermediaires = path_relinking!(paire[1], paire[2], nondominated_solutions, Q, c, b, d, s)
-
+			println(length(sols_intermediaires))
 			# intensification sur chaque solution du path relinking
 			#println("intensification sur $(length(sols_intermediaires)) solutions")
+			#for sol in sample(sols_intermediaires, Int(floor(0.1*length(sols_intermediaires))), replace=false)
 			for sol in sols_intermediaires
 				tabu1 = tabu(1, sol, Q, tenure, k, c, b, s, d)
 				tabu2 = tabu(2, sol, Q, tenure, k, c, b, s, d)

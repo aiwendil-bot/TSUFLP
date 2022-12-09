@@ -4,7 +4,7 @@ main:
 - Author: sujin
 - Date: 2022-11-02
 =#
-using Random, Profile, Plots, LaTeXStrings
+using Random, Profile, Plots, LaTeXStrings, StatsBase
 Random.seed!(1235)
 include("Solution.jl")
 include("SkipList.jl")
@@ -24,6 +24,7 @@ include("resoudre_instance_sanchez.jl")
 include("plot_sols.jl")
 include("crossover.jl")
 include("../tests/vopt_model.jl")
+include("resoudre_instance_angers.jl")
 function main()
 
 
@@ -32,31 +33,43 @@ function main()
 
     a::Float64 = 0.4
 
-    P = 300
+    P = 150
 
     k = 0.5
 
     β = 8
     #vopt_resolve("data/files/small2.txt")
-    #resoudre_instance_sanchez("data/files/small2.txt", Q,a,P,k,β,true)
+    resoudre_instance_sanchez("data/files/small2.txt", Q,a,P,k,β,false,false)
     #resoudre_instance_sanchez("data/files/small2.txt", Q,a,P,k,β,false)
 
     #comparaison_scatter_vOpt("small2")
      
-    for file in readdir("tests/instances_test/", join=true)
-        for k in [0.1,0.5,0.9]
-        nameinstance = String(split(Vector(split(file, '/'))[end],'.')[1])               
+    #for file in readdir("tests/instances_test/", join=true)
     
-        #vopt_resolve(file)
+    for file in ["tests/instances_test/large5.txt"]    
+    #vopt_resolve_angers()
+
+    for k in [0.05]
+        nameinstance = String(split(Vector(split(file, '/'))[end],'.')[1])               
+        #=
+        resoudre_instance_sanchez(file,Q,a,P,k,β,false,false)  
+        resoudre_instance_sanchez(file,Q,a,P,k,β,true,false)  
+
+        resoudre_instance_sanchez(file,Q,a,P,k,β,true,true)  
+        =#
+        comparaison_scatter_vOpt(nameinstance,k)
+        
+        #=
         resoudre_instance_sanchez(file, Q,a,P,k,β,false,false)
         resoudre_instance_sanchez(file, Q,a,P,k,β,true,false)
         resoudre_instance_sanchez(file, Q,a,P,k,β,true,true)
-        comparaison_scatter_vOpt(nameinstance,k)
-
+        =#
         end
     
     end    
     
+    
+
     #=
     println("generation pop de taille $P w/ grasp")
     solutions = @time grasp(I, J, K, Q, b, c, s, distances, a, P)
