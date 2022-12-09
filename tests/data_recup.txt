@@ -1,0 +1,51 @@
+
+large ; à part
+
+pour chaque valeur de K
+
+    le temps moyen pour les small
+    le temps moyen pour les medium
+
+pour chaque stratégie
+    pour smalls 
+        moyenne des temps
+    pour medium    
+
+
+pour chaque instance
+    regarder si 0.9 domine 0.5/0.1 et si 0.5 domine 0.1
+    faire des moyennes pour chaque cas
+
+
+pour k = 0.1
+    pour les smalls : 
+        temps moyen
+        dominance tabu_cross > cross et normal
+        dominance cross > normal
+        moyenne des distances à vopt(points les plus proches)
+
+    de même pour medium
+
+instance angers : 
+
+x 1000 les distances et refaire tourner
+
+présenter les spécificités
+modèle
+
+skiplist ()
+
+scatter search
+
+1 
+2
+3
+4
+5
+=> choix qu'on a fait
+
+6 anaalyse que pas satisfait diversité + distance à vopt 
+=> crossover + intensification
+
+=> analyse croiser résultats
+limites, pistes d'amélioration
