@@ -55,7 +55,7 @@ function comparaison_scatter_vOpt(instance_name::String,k::Float64)
 
     comparaison = scatter(YN_scatter[:,1],YN_scatter[:,2],color=:blue,label=L"$Y_N$ scatter")
     scatter!(YN_scatter_cross[:,1],YN_scatter_cross[:,2],color=:green,label=L"$Y_N$ scatter_cross")
-    scatter!(YN_scatter_tabu_cross[:,1],YN_scatter_cross[:,2],color=:orange,label=L"$Y_N$ scatter_tabu_cross")
+    scatter!(YN_scatter_tabu_cross[:,1],YN_scatter_tabu_cross[:,2],color=:orange,label=L"$Y_N$ scatter_tabu_cross")
     
     scatter!(YN_vOpt[:,1],YN_vOpt[:,2],color=:red,label=L"$Y_N$ vOpt")
     title!("$instance_name avec k = $k")

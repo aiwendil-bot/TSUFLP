@@ -33,11 +33,11 @@ function main()
 
     a::Float64 = 0.4
 
-    P = 150
+    P = 300
 
-    k = 0.5
+    k = 0.1
 
-    β = 8
+    β = 10
     #vopt_resolve("data/files/small2.txt")
     resoudre_instance_sanchez("data/files/small2.txt", Q,a,P,k,β,false,false)
     #resoudre_instance_sanchez("data/files/small2.txt", Q,a,P,k,β,false)
@@ -53,18 +53,28 @@ function main()
 
         #nameinstance = String(split(Vector(split(file, '/'))[end],'.')[1])               
         nameinstance = "angers"
-        resoudre_instance_angers(Q,a,P,k,β,false,false) 
-        resoudre_instance_angers(Q,a,P,k,β,true,false) 
+        #resoudre_instance_angers(Q,a,P,k,β,false,false) 
+        #resoudre_instance_angers(Q,a,P,k,β,true,false) 
 
-        resoudre_instance_angers(Q,a,P,k,β,true,true) 
-
-        #=
-        resoudre_instance_sanchez(file,Q,a,P,k,β,false,false)  
-        resoudre_instance_sanchez(file,Q,a,P,k,β,true,false)  
-
-        resoudre_instance_sanchez(file,Q,a,P,k,β,true,true)  
-        =#
+        #resoudre_instance_angers(Q,a,P,k,β,true,true) 
         comparaison_scatter_vOpt(nameinstance,k)
+    end
+
+        for file in readdir("tests/instances_test/", join=true)
+            for k in [0.1,0.5,0.9]
+                nameinstance = String(split(Vector(split(file, '/'))[end],'.')[1])    
+
+        
+            #resoudre_instance_sanchez(file,Q,a,P,k,β,false,false)  
+            #resoudre_instance_sanchez(file,Q,a,P,k,β,true,false)  
+
+            #resoudre_instance_sanchez(file,Q,a,P,k,β,true,true)
+            comparaison_scatter_vOpt(nameinstance,k)
+            end
+        end
+  
+        
+        
         
         #=
         resoudre_instance_sanchez(file, Q,a,P,k,β,false,false)
@@ -73,7 +83,7 @@ function main()
         =#
         
     
-    end    
+    
     
     
 

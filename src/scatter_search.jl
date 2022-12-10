@@ -1,7 +1,7 @@
 function scatter_search(instance_name::String, c::Array{Int64, 2}, b::Array{Int64, 2}, s::Vector{Int64}, d::Array{Int64, 2},
 	Q::Int64, a::Float64, P::Int64, k::Float64, β::Int64, crossover_on::Bool, tabu_cross_on::Bool)
 
-	tenure = 7
+	tenure = Int(floor(0.1*size(c,2)))
 
 	println("scatter search sur l'instance $instance_name")
 

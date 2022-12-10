@@ -19,7 +19,7 @@ function generation_matrice_distance(liste1,liste2)::Array{Int64,2}
     distances = zeros((length(liste1[:,1]),length(liste2[:,1])))
     for i in 1:length(liste1[:,1])
         for j in 1:length(liste2[:,1])
-            distances[i,j] = Int(floor(distance(liste1[i,:],liste2[j,:])))
+            distances[i,j] = Int(floor(distance(liste1[i,:],liste2[j,:]) * 1000))
         end
     end
     return distances
