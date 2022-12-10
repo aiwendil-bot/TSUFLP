@@ -9,7 +9,7 @@ function resoudre_instance_angers(Q::Int64 ,
     println(length(terms))
     # génération des matrices de distance, c , b, s
     
-    distances = generation_matrice_distance(terms, conclvl1)
+    distances = generation_matrice_distance(terms, conclvl1) .* 1000
 
     c = generation_c_sanchez(size(terms,1),size(conclvl1,1),minimum(distances),maximum(distances))
 

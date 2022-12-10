@@ -46,11 +46,18 @@ function main()
      
     #for file in readdir("tests/instances_test/", join=true)
     
-    for file in ["tests/instances_test/large5.txt"]    
+       
     #vopt_resolve_angers()
 
-    for k in [0.05]
-        nameinstance = String(split(Vector(split(file, '/'))[end],'.')[1])               
+    for k in [0.1,0.5,0.9]
+
+        #nameinstance = String(split(Vector(split(file, '/'))[end],'.')[1])               
+        nameinstance = "angers"
+        resoudre_instance_angers(Q,a,P,k,β,false,false) 
+        resoudre_instance_angers(Q,a,P,k,β,true,false) 
+
+        resoudre_instance_angers(Q,a,P,k,β,true,true) 
+
         #=
         resoudre_instance_sanchez(file,Q,a,P,k,β,false,false)  
         resoudre_instance_sanchez(file,Q,a,P,k,β,true,false)  
@@ -64,7 +71,7 @@ function main()
         resoudre_instance_sanchez(file, Q,a,P,k,β,true,false)
         resoudre_instance_sanchez(file, Q,a,P,k,β,true,true)
         =#
-        end
+        
     
     end    
     

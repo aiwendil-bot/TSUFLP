@@ -91,7 +91,7 @@ function vopt_resolve_angers()
  
     # génération des matrices de distance, c , b, s
 
-    distances = generation_matrice_distance(terms, conclvl1)
+    distances = generation_matrice_distance(terms, conclvl1) .* 1000
 
     c = generation_c_sanchez(length(terms),length(conclvl1),minimum(distances),maximum(distances))
 
