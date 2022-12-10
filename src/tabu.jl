@@ -46,7 +46,7 @@ function tabu(obj::Int64, sol::Solution,Q::Int64,tenure::Int64,k::Float64,
         
         while !found_amelio && i <= length(best_candidate.conclvl1_ouverts)
             
-            while !found_amelio && j <= length(setdiff(1:length(best_candidate.assign_conclvl1),best_candidate.conclvl1_ouverts))
+            while !found_amelio && j <= length(setdiff(1:length(best_candidate.assign_conclvl1),best_candidate.conclvl1_ouverts)) #concentrateurs fermés
                 conc_depart = best_candidate.conclvl1_ouverts[i]
                 conc_arrivée = setdiff(1:length(best_candidate.assign_conclvl1),best_candidate.conclvl1_ouverts)[j]
 
