@@ -125,6 +125,8 @@ function scatter_search(instance_name::String, c::Array{Int64, 2}, b::Array{Int6
 
 								if tabu_cross_on && (evaluate_solution(1,sol_cross,d,c,b,s) < evaluate_solution(1,sol,d,c,b,s)
                                                     || evaluate_solution(2,sol_cross,d,c,b,s) < evaluate_solution(2,sol,d,c,b,s))
+
+													println("tabu sur un crossover prometteur")
                                     
 
 									if isFeasible(sol_cross, Q)

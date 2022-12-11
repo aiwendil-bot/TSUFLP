@@ -21,8 +21,6 @@ function get_terminals(filename::String,lat_inf::Float64,lat_sup::Float64,long_i
     coordinates.latitude = coordinates.latitude ./ (pi / 360)
     coordinates.latitude = coordinates.latitude .- 90
 
-    println(describe(coordinates))
-
     box = coordinates[([ long_inf <= i <= long_sup for i in coordinates.longitude]) .& [ lat_inf <= i <= lat_sup for i in coordinates.latitude],:]
        open("data/terminaux.txt", "w") do io
            writedlm(io, [[box.latitude[i],box.longitude[i]] for i in 1:size(box,1)])

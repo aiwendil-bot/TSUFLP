@@ -69,7 +69,6 @@ function grasp(I::Vector{Int64}, J::Vector{Int64}, K::Vector{Int64}, Q::Int64, b
     #construit une array des terminaux triés par distance décroissante de chaque CLVL1
 
     terminaux_tries_distance = Array{Int64,2}(undef,(length(I),length(J)))
-    println(size(terminaux_tries_distance))
     for j in 1:length(J)
         terminaux_tries_distance[:,j] = sort(I,by= term -> d[term,j],rev=true)
     end
