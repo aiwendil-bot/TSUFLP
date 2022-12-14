@@ -1,4 +1,9 @@
 
+#=
+
+fonctions relatives aux refSets (create et update)
+
+=#
 
 function create_refset(solutions::Vector{Solution},β::Int64,
                             b::Array{Int64,2},c::Array{Int64,2}, s::Vector{Int64}, 

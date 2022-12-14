@@ -1,3 +1,11 @@
+
+#= différentes fonctions pour afficher les résultats de 
+grasp, 
+tabu, 
+front de pareto, 
+comparaison entre les stratégies
+=#
+using LaTeXStrings, Plots
 function plot_grasp(solutions::Vector{Solution},name_instance::String, c::Array{Int64,2},b::Array{Int64,2},s::Vector{Int64},distances::Array{Int64,2})
     
     P = length(solutions)

@@ -182,7 +182,7 @@ function scatter_search(instance_name::String, c::Array{Int64, 2}, b::Array{Int6
 	end
 
 
-	return [[elem.point.x, elem.point.y] for elem in get_elems(nondominated_solutions)]
+	return [[[elem.point.x, elem.point.y] for elem in get_elems(nondominated_solutions)], [[elem.sol.assign_term,elem.sol.assign_conclvl1] for elem in get_elems(nondominated_solutions)] ]
 
 end
 

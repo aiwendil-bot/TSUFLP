@@ -1,14 +1,13 @@
-#=
-generation_couts:
-- Julia version: 1.8.0
-- Author: adrien
-- Date: 2022-11-20
-=#
-
 include("utilities.jl")
 
 using Random
 Random.seed!(1234)
+
+#=
+
+fonctions servant à générer les coûts c b z pour une instance type angers (depuis dataset)
+
+=#
 
 function generation_couts_ouverture_clvl(nb_concentrateurs::Int64)::Vector{Int64}
     return rand(Int64,nb_concentrateurs) .* 10

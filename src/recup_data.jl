@@ -1,9 +1,20 @@
 using CSV, DataFrames, DelimitedFiles
 
-function get_terminals(filename::String,lat_inf::Float64,lat_sup::Float64,long_inf::Float64,long_sup::Float64)
+#=
+
+get terminals : écrit dans un fichier dans un sous dossier de data (nom du sous dossier en params)
+les terminaux situés dans un rectangle défini par les params (lat_inf, etc)
+les terminaux sont récupérés depuis le dataset communes
+
+
+get concentrators : récupère les points d'un dataset obtenu via overpass-turbo et 
+les écrit dans un fichier (sous dossier de data, nom en param)
+=#
+
+function get_terminals(data::String, out::String,lat_inf::Float64,lat_sup::Float64,long_inf::Float64,long_sup::Float64)
 
     #conversion
-    df = DataFrame(CSV.File(filename))
+    df = DataFrame(CSV.File(data))
     coordinates = df[ :,["imb_x","imb_y"]]
 
     e = 2.7182818284
@@ -22,24 +33,19 @@ function get_terminals(filename::String,lat_inf::Float64,lat_sup::Float64,long_i
     coordinates.latitude = coordinates.latitude .- 90
 
     box = coordinates[([ long_inf <= i <= long_sup for i in coordinates.longitude]) .& [ lat_inf <= i <= lat_sup for i in coordinates.latitude],:]
-       open("data/terminaux.txt", "w") do io
+
+    if !ispath("data/$out")
+        mkdir("data/$out")
+    end
+       open("data/$out/terminaux.txt", "w") do io
            writedlm(io, [[box.latitude[i],box.longitude[i]] for i in 1:size(box,1)])
        end
 
 end
 
-#get_terminals("data/communes",47.40904,47.50549,-0.65266,-0.42212)
 
 
-function get_concentrators(filename::String)
-
-    df = DataFrame(CSV.File(filename))
-    polygons = df[ [i == "Polygon" for i in df.geometry], ["coordinates"]]
-    points = df[ [i == "Point" for i in df.geometry], ["latitude","longitude"]]
-    vect_points = Vector{Vector{Float64}}(undef,size(points,1))
-    for i in 1:size(points,1)
-        vect_points[i] = [points[i,1],points[i,2]]
-    end
+function get_concentrators(fileclvl1::String,fileclvl2::String,out::String)
 
     function string_to_mean(string::String)::Vector{Float64}
 
@@ -48,12 +54,35 @@ function get_concentrators(filename::String)
                 sum([tuple[i] for i in 1:2:length(tuple)])/(length(tuple)/2)]
     end
 
-    polygons.coordinates = map(elem->string_to_mean(elem), polygons.coordinates)
+    for file in [fileclvl1,fileclvl2]
 
-    open("data/clvl1.txt", "w") do io
-           writedlm(io, vcat(polygons.coordinates,vect_points))
-       end
+        df = DataFrame(CSV.File(file))
+        polygons = df[ [i == "Polygon" for i in df.geometry], ["coordinates"]]
+        points = df[ [i == "Point" for i in df.geometry], ["latitude","longitude"]]
+        vect_points = Vector{Vector{Float64}}(undef,size(points,1))
+        for i in 1:size(points,1)
+            vect_points[i] = [points[i,1],points[i,2]]
+        end
 
+        
+
+        polygons.coordinates = map(elem->string_to_mean(elem), polygons.coordinates)
+
+        if !ispath("data/$out")
+            mkdir("data/$out")
+        end
+
+        if file == fileclvl1
+
+            open("data/$out/clvl1.txt", "w") do io
+                writedlm(io, vcat(polygons.coordinates,vect_points))
+            end
+        else
+            open("data/$out/clvl2.txt", "w") do io
+                writedlm(io, vcat(polygons.coordinates,vect_points))
+            end
+            
+        end
+
+    end
 end
-
-#get_concentrators("data/clvl1.csv")

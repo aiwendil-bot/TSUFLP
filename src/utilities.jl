@@ -5,7 +5,6 @@ utilities:
 - Date: 2022-10-31
 =#
 using DelimitedFiles
-include("nearest_neighbors.jl")
 
 # fonction d'utilité liée à la fonction de coût entre terminaux libres et le CLVL1 candidat
 # candidat clvl1

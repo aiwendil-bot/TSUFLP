@@ -1,7 +1,7 @@
 
 #=
 échange la moitié des terminaux entre deux concentrateurs (ouverts)
-
+renvoie deux nouvelles solutions (selon si on échange la 1ère ou la 2nde moitié)
 =#
 
 function crossover(sol::Solution, conc1::Int64, conc2::Int64, Q::Int64)::Vector{Solution}
@@ -27,11 +27,5 @@ function crossover(sol::Solution, conc1::Int64, conc2::Int64, Q::Int64)::Vector{
     end
 
     return [res1, res2]
-
-end
-
-function crossover_inter_solution(sol1::Solution, sol2::Solution)::Solution
-
-    
 
 end

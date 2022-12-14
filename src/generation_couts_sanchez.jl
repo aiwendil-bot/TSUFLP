@@ -1,5 +1,11 @@
 Random.seed!(1235)
 
+#=
+
+fonctions servant à générer les coûts pour les instances de Sanchez 
+
+=#
+
 
 function distance_euclidienne(coord1::Vector{Float64},coord2::Vector{Float64})::Int64
 

@@ -4,6 +4,11 @@ using DelimitedFiles
 include("Solution.jl")
 include("utilities.jl")
 
+
+#= fonctions permettant de récupérer les résultats (moyennes, coverage measures, ...) de nos tests sur les
+instances (tests/instances_test)
+=# 
+
 smalls = ["small1","small2","small7","small10","small11","small14","small16","small17","small18","small20"]
 mediums = ["medium5","medium7","medium9","medium11","medium13","medium17","medium20"]
 
@@ -145,7 +150,7 @@ function temps_strat()
     strats = ["YN_scatter","YN_scatter_cross","YN_scatter_tabu_cross"]
     for strat in eachindex(strats)
 
-        for k in [0.1]
+        for k in [0.5]
 
             for instance in smalls
 
@@ -158,10 +163,9 @@ function temps_strat()
         end
     end
     for k in 1:3
+        println("k = $k")
     println("temps moyens smalls strat $(strats[k]) : ", tstratsmall[k]/(length(smalls)) )
-    end
 
-    for k in 1:3
         println("temps moyens mediums strat $(strats[k]) : ", tstratmedium[k]/(length(mediums)) )
     end
 
@@ -199,15 +203,15 @@ function dominance_strats()
     dom_smalls = [0.0,0.0,0.0] #tabu cross dom cross / tabu cross dom scatter / cross dom scatter
     dom_mediums = [0.0,0.0,0.0]
     for instance in smalls
-        dom_smalls[1] += compare_YN("out/$instance/YN_scatter_tabu_cross_0.1.txt","out/$instance/YN_scatter_cross_0.1.txt")
-        dom_smalls[2] += compare_YN("out/$instance/YN_scatter_tabu_cross_0.1.txt","out/$instance/YN_scatter_0.1.txt")
-        dom_smalls[3] += compare_YN("out/$instance/YN_scatter_cross_0.1.txt","out/$instance/YN_scatter_0.1.txt")
+        dom_smalls[1] += compare_YN("out/$instance/YN_scatter_tabu_cross_0.1.txt","out/$instance/YN_scatter_cross_0.5.txt")
+        dom_smalls[2] += compare_YN("out/$instance/YN_scatter_tabu_cross_0.1.txt","out/$instance/YN_scatter_0.5.txt")
+        dom_smalls[3] += compare_YN("out/$instance/YN_scatter_cross_0.1.txt","out/$instance/YN_scatter_0.5.txt")
     end
 
     for instance in mediums
-        dom_mediums[1] += compare_YN("out/$instance/YN_scatter_tabu_cross_0.1.txt","out/$instance/YN_scatter_cross_0.1.txt")
-        dom_mediums[2] += compare_YN("out/$instance/YN_scatter_tabu_cross_0.1.txt","out/$instance/YN_scatter_0.1.txt")
-        dom_mediums[3] += compare_YN("out/$instance/YN_scatter_cross_0.1.txt","out/$instance/YN_scatter_0.1.txt")
+        dom_mediums[1] += compare_YN("out/$instance/YN_scatter_tabu_cross_0.1.txt","out/$instance/YN_scatter_cross_0.5.txt")
+        dom_mediums[2] += compare_YN("out/$instance/YN_scatter_tabu_cross_0.1.txt","out/$instance/YN_scatter_0.5.txt")
+        dom_mediums[3] += compare_YN("out/$instance/YN_scatter_cross_0.1.txt","out/$instance/YN_scatter_0.5.txt")
     end
     println("pour les smalls")
     println("tabu cross dom cross : ", dom_smalls[1]/length(smalls))
@@ -248,6 +252,28 @@ function moyenne_distance_vopt(k)
     
 end
 
+function moyenne_temps_vopt()
+
+    
+    tsmalls = 0
+    tmediums = 0
+    for instance in smalls
+        tsmalls += readdlm("out/$instance/YN_vOpt.txt")[1,1]
+        #tsmalls += readdlm("out/$instance/YN_scatter_cross_$k.txt")[1,1]
+        #tsmalls += readdlm("out/$instance/YN_scatter_tabu_cross_$k.txt")[1,1]
+    end
+
+    for instance in mediums
+        tmediums += readdlm("out/$instance/YN_vOpt.txt")[1,1]
+        #tmediums += readdlm("out/$instance/YN_scatter_cross_$k.txt")[1,1]
+        #tmediums += readdlm("out/$instance/YN_scatter_tabu_cross_$k.txt")[1,1]
+    end
+
+    println("temps moyens smalls = ", tsmalls/(length(smalls)))
+    println("temps moyens mediums = ", tmediums/(length(mediums)))
+
+
+end
 
 moyenne_temps(0.1)
 println("---------------")
@@ -269,3 +295,5 @@ for k in [0.1,0.5,0.9]
     println("---------------")
     moyenne_distance_vopt(k)
 end
+
+moyenne_temps_vopt()
