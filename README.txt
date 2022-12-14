@@ -12,7 +12,7 @@ data/
 out/ 
 
     -> chaque sous dossier porte le nom de l'instance concernée
-        -> les plots de grasp, 1er passage de tabu et les comparaison entre stratégies (crossover, crossover + tabu)
+        -> les plots de grasp, 1er passage de tabu et les comparaisons entre stratégies (crossover, crossover + tabu)
         -> les fronts de Pareto à chaque itération du test k = 0.9 ; crossover + tabu
         -> les fichiers XE_STRAT_k.txt : chaque ligne = une solution (affectation des terminaux / affectation des conc. de niveau 1)
         -> les fichiers YN_STRAT_k.txt : 1ère ligne : temps d'exec - card(YN) puis les valeurs de (z1,z2) pour chaque solution
