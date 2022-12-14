@@ -5,7 +5,7 @@ include("../src/resoudre_instance_via_dataset.jl")
 
 function main(args)
     if length(args) == 0
-        resoudre_instance_via_dataset("angers", "data/terms_49.txt",[47.40904,47.50549,-0.65266,-0.42212],"data/clvl1.csv","data/clvl2.csv",[100,25,4])
+        resoudre_instance_via_dataset([100,25,4])
     else
 
         taille1 = parse(Int64,args[1])
@@ -19,8 +19,7 @@ function main(args)
         crossover_on = parse(Bool,args[9])
         tabu_cross_on = parse(Bool,args[10])
 
-        resoudre_instance_via_dataset("angers", "data/terms_49.txt",[47.40904,47.50549,-0.65266,-0.42212],
-        "data/clvl1.csv","data/clvl2.csv",[taille1,taille2,taille3],Q,a,P,k,β,crossover_on,tabu_cross_on)
+        resoudre_instance_via_dataset([taille1,taille2,taille3],Q,a,P,k,β,crossover_on,tabu_cross_on)
     end
 
     

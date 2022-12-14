@@ -28,17 +28,13 @@ taille [nb_terms, nb_clvl1, nb_clvl2]
 =#
 
 
-function resoudre_instance_via_dataset(nameinstance::String, data_terms::String,zone::Vector{Float64},csvconc1::String,csvconc2::String,taille::Vector{Int64}, Q::Int64=7 , 
+function resoudre_instance_via_dataset(taille::Vector{Int64}, Q::Int64=7 , 
     a::Float64=0.4, P::Int64=300,  k::Float64=0.5 , β::Int64=10, crossover_on::Bool=false, tabu_cross_on::Bool=false)
 
-    get_terminals(data_terms,nameinstance,zone[1],zone[2],zone[3],zone[4])
-    get_concentrators(csvconc1,csvconc2,nameinstance)
+    nameinstance = "angers"
 
-    
-    
-
-    terms, conclvl1, conclvl2 = readdlm("data/$nameinstance/terminaux.txt")[1:taille[1],:], readdlm("data/$nameinstance/clvl1.txt")[1:taille[2],:], 
-    readdlm("data/$nameinstance/clvl2.txt")[1:taille[3],:]
+    terms, conclvl1, conclvl2 = readdlm("data/angers/terminaux.txt")[1:taille[1],:], readdlm("data/angers/clvl1.txt")[1:taille[2],:], 
+    readdlm("data/angers/clvl2.txt")[1:taille[3],:]
     # génération des matrices de distance, c , b, s
     
     distances = generation_matrice_distance(terms, conclvl1)
@@ -59,26 +55,26 @@ function resoudre_instance_via_dataset(nameinstance::String, data_terms::String,
 
         if tabu_cross_on
 
-            writedlm("out/$nameinstance/YN_scatter_tabu_cross_$k.txt",vcat([[ending_time,length(YN)]],YN))
-            writedlm("out/$nameinstance/XE_scatter_tabu_cross_$k.txt",XE)
+            writedlm("out/angers/YN_scatter_tabu_cross_$k.txt",vcat([[ending_time,length(YN)]],YN))
+            writedlm("out/angers/XE_scatter_tabu_cross_$k.txt",XE)
             
 
 
         else
 
-            writedlm("out/$nameinstance/YN_scatter_cross_$k.txt",vcat([[ending_time,length(YN)]],YN))
-            writedlm("out/$nameinstance/XE_scatter_cross_$k.txt",XE)
+            writedlm("out/angers/YN_scatter_cross_$k.txt",vcat([[ending_time,length(YN)]],YN))
+            writedlm("out/angers/XE_scatter_cross_$k.txt",XE)
 
         end
 
     else    
 
-        writedlm("out/$nameinstance/YN_scatter_$k.txt",vcat([[ending_time,length(YN)]],YN))
-        writedlm("out/$nameinstance/XE_scatter_$k.txt",XE)
+        writedlm("out/angers/YN_scatter_$k.txt",vcat([[ending_time,length(YN)]],YN))
+        writedlm("out/angers/XE_scatter_$k.txt",XE)
 
     end
 
-    println("fichiers de résultats (plots, Y_N, X_E) écrits dans out/$nameinstance")
+    println("fichiers de résultats (plots, Y_N, X_E) écrits dans out/angers")
     
 end
 

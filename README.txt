@@ -76,9 +76,8 @@ tests/
 
         -> lance l'instance angers avec les paramètres par défaut et taille = [100,25,4]
 
-        julia tests/SS_angers.jl nb_terms nb_clvl1 nb_clvl2 Q a P k beta crossover_on tabu_crossover_on
+        julia tests/SS_angers.jl nI nJ nK Q a P k beta crossover_on tabu_crossover_on
 
-        -> lance l'instance angers sur les paramètres spécifiés (nb_terms <= 55800 ; nb_clvl1 <= 71 ; nb_clvl2 <= 4 )
 
     comparer_strategies
 

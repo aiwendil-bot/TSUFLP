@@ -43,12 +43,9 @@ function main()
     resoudre_instance_sanchez("data/files/small2.txt", Q,a,P,k,β,false,false)
 
     for k in [0.1,0.5,0.9]
-        resoudre_instance_via_dataset("angers", "data/terms_49.txt",[47.40904,47.50549,-0.65266,-0.42212],"data/clvl1.csv","data/clvl2.csv",[100,25,4], Q, 
-    a, P,  k , β, false, false)
-        resoudre_instance_via_dataset("angers", "data/terms_49.txt",[47.40904,47.50549,-0.65266,-0.42212],"data/clvl1.csv","data/clvl2.csv",[100,25,4], Q, 
-    a, P,  k , β, true, false)
-        resoudre_instance_via_dataset("angers", "data/terms_49.txt",[47.40904,47.50549,-0.65266,-0.42212],"data/clvl1.csv","data/clvl2.csv",[100,25,4], Q, 
-    a, P,  k , β, true, false)
+        resoudre_instance_via_dataset([100,25,4], Q, a, P,  k , β, false, false)
+        resoudre_instance_via_dataset([100,25,4], Q, a, P,  k , β, true, false)
+        resoudre_instance_via_dataset([100,25,4], Q, a, P,  k , β, true, false)
     end
 
     for file in readdir("data/instances_test",join=true)
