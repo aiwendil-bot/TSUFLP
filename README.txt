@@ -48,15 +48,15 @@ tests/
 
         -> dans un terminal, se placer dans TSUFLP/
 
-        julia SS_Sanchez.jl
+        julia tests/SS_Sanchez.jl
 
         -> lance SS avec les paramètres par défaut sur small2
         
-        julia SS_Sanchez.jl noms_instance
+        julia tests/SS_Sanchez.jl noms_instance
 
         -> lance SS avec les paramètres par défaut sur nom_instance 
 
-        julia SS_Sanchez.jl noms_instance Q a P k beta crossover_on tabu_crossover_on
+        julia tests/SS_Sanchez.jl noms_instance Q a P k beta crossover_on tabu_crossover_on
 
         -> lance SS avec les paramètres spécifiés sur nom_instance
 
@@ -72,11 +72,11 @@ tests/
         
         -> dans un terminal, se placer dans TSUFLP/
 
-        julia SS_angers.jl
+        julia tests/SS_angers.jl
 
         -> lance l'instance angers avec les paramètres par défaut et taille = [100,25,4]
 
-        julia SS_angers.jl nb_terms nb_clvl1 nb_clvl2 Q a P k beta crossover_on tabu_crossover_on
+        julia tests/SS_angers.jl nb_terms nb_clvl1 nb_clvl2 Q a P k beta crossover_on tabu_crossover_on
 
         -> lance l'instance angers sur les paramètres spécifiés (nb_terms <= 55800 ; nb_clvl1 <= 71 ; nb_clvl2 <= 4 )
 
@@ -84,12 +84,12 @@ tests/
 
         -> dans un terminal, se placer dans TSUFLP/
 
-        julia comparer_strategies.jl
+        julia tests/comparer_strategies.jl
         
         -> lance la comparaison entre SS, SS + crossover, SS + crossover + tabu 
             sur small2.txt avec les paramètres par défaut
 
-        julia SS_Sanchez.jl noms_instance Q a P k beta
+        julia tests/comparer_strategies.jl noms_instance Q a P k beta
 
         -> lance d'abord la résolution avec vOpt si l'instance n'a pas déjà été testée (peut être long sur les mediums)
         -> lance la comparaison entre les trois stratégies avec les paramètres spécifiés
